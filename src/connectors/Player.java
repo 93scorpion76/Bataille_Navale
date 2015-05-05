@@ -1,12 +1,12 @@
 package connectors;
 
-public class Joueur {
+public class Player {
 
 	private int Id; 
 	private String Nom;
 	private int PosBateau;
 	
-	public Joueur(int id, String nom)
+	public Player(int id, String nom)
 	{
 		Id = id; 
 		Nom = nom;
