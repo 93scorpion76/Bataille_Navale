@@ -27,7 +27,6 @@ public class Server {
 			{			
 				Socket sock = srv.accept();
 				System.out.println("Client n°"+nbclient+" connecté sur le port: "+sock.getPort()+".");
-				PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
 				
 				// Lecture du nom du client
 				InputStreamReader isr = new InputStreamReader(sock.getInputStream());
@@ -42,15 +41,19 @@ public class Server {
 					nbRoom++;
 					room.AddPlayer(new Player(nbclient, nom_client));
 				}
-				out.println("Bienvenu sur la room n°"+room.getIdRoom());
+				
+				// Envoi d'un msg de bienvenu + de l'id du joueur associé à ce client.
+				PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
+				JSONObject dataset = new JSONObject();
+				String msg_welcome = "Bienvenu sur la room n°"+room.getIdRoom();
+				dataset.put("Message_Welcome",msg_welcome);
+				dataset.put("IdPlayer", nbclient);
+				out.println(dataset); // Envoi au client le fichier json
+	
 				// Démarrer Thread runnable avec en paramètre la socket. 
 				new Thread(new ServerThread(sock,room)).start();
 				nbclient++;
 			}
 		} catch (Exception e) {System.out.println("Erreur serveur:"+e.getMessage());}
 	}
-	
-	public static void main(String arg[]){
-		new Server(1234);
-	}	
 }

@@ -35,4 +35,15 @@ public class Room {
 		public int getIdRoom() {
 			return idRoom;
 		}
+		
+		public Player getPlayer(int idPlayer)
+		{
+			for(int i=0; i<lPlayer.size();i++)
+			{
+				if(lPlayer.get(i).getId() == idPlayer)
+					return lPlayer.get(i);
+			}
+			return null;
+		}
+		
 }
