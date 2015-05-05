@@ -45,7 +45,7 @@ public class Server {
 				// Envoi d'un msg de bienvenu + de l'id du joueur associé à ce client.
 				PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
 				JSONObject dataset = new JSONObject();
-				String msg_welcome = "Bienvenu sur la room n°"+room.getIdRoom();
+				String msg_welcome = "Bienvenu "+nom_client+" sur la room n°"+room.getIdRoom();
 				dataset.put("Message_Welcome",msg_welcome);
 				dataset.put("IdPlayer", nbclient);
 				out.println(dataset); // Envoi au client le fichier json

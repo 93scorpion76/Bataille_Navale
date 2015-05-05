@@ -17,31 +17,30 @@ public class Client {
 	private Socket sock; 
 	private InputStreamReader isr; 
 	private BufferedReader in;
-	private int idJoueur;
+	private Player player;
 	
-	private Client(String ip, int port) throws UnknownHostException, IOException{
+	public Client(String ip, int port, String nomJoueur){
+		try {
 			sock = new Socket(ip,port);
 			isr = new InputStreamReader(sock.getInputStream());
 			in = new BufferedReader(isr);
-	}
-	
-	public int Init(String ip, int port)
-	{
-		try {
-			new Client(ip,port);
-			
 			in.ready();
+			JSONObject dataset = new JSONObject();
+			dataset.put("Nom", nomJoueur);
+			
 			System.out.println("Ouverture client");
 			// Afficher msg server et récup idJoueur
-			JSONObject json = new JSONObject(in.readLine());
+			JSONObject json = new JSONObject(EnvoiRequete(dataset));
 			String msg_welcome = (String) json.get("Message_Welcome");
 			System.out.println("Réponse serveur:"+msg_welcome);
 			int idJoueur = (int) json.get("IdPlayer");
-			return idJoueur;
-		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage()); return -1;} 
+			
+			player = new Player(idJoueur,nomJoueur);
+				
+			} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
 	}
 	
-	public int Shoot(Player player, int posTir)
+	public int Shoot(int posTir)
 	{
 		JSONObject dataset = new JSONObject();
 		try {

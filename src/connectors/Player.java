@@ -26,14 +26,7 @@ public class Player {
 
 	public String getNom() {
 		return Nom;
-	}
-	
-	public void Tirer(int posTir)
-	{
-		// Requête vers serveur en lui passant idJoueur + posTir
-		
-	}
-	
+	}	
 }
 	
 
