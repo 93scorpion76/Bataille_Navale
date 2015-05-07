@@ -18,13 +18,15 @@ public class Server {
 	public Server(int numPort){
 		try {
 			int nbRoom = 0;
-			Room room = new Room(nbRoom);
+			Room room = new Room(nbRoom,2);
 			nbRoom++;
-			int nbclient = 0;
+			int nbclient = 1;
+			ServerThread srvTh = new ServerThread(room);
 			ServerSocket srv = new ServerSocket(numPort);
+			
 			System.out.println("Srv à l'écoute...");
 			while(true)
-			{			
+			{	
 				Socket sock = srv.accept();
 				System.out.println("Client n°"+nbclient+" connecté sur le port: "+sock.getPort()+".");
 				
@@ -37,7 +39,8 @@ public class Server {
 				// Ajout du joueur à la room.
 				if(!room.AddPlayer(new Player(nbclient, nom_client)))
 				{
-					room = new Room(nbRoom);
+					room = new Room(nbRoom,2);
+					srvTh = new ServerThread(room);
 					nbRoom++;
 					room.AddPlayer(new Player(nbclient, nom_client));
 				}
@@ -49,9 +52,8 @@ public class Server {
 				dataset.put("Message_Welcome",msg_welcome);
 				dataset.put("IdPlayer", nbclient);
 				out.println(dataset); // Envoi au client le fichier json
-	
-				// Démarrer Thread runnable avec en paramètre la socket. 
-				new Thread(new ServerThread(sock,room)).start();
+				srvTh.AddSocket(sock);
+				new Thread(srvTh).start();
 				nbclient++;
 			}
 		} catch (Exception e) {System.out.println("Erreur serveur:"+e.getMessage());}

@@ -6,11 +6,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import connectors.Player;
+import connectors.Room;
 
 public class Client {
 
@@ -18,6 +20,7 @@ public class Client {
 	private InputStreamReader isr; 
 	private BufferedReader in;
 	private Player player;
+	private boolean jeton; 
 	
 	public Client(String ip, int port, String nomJoueur){
 		try {
@@ -27,17 +30,55 @@ public class Client {
 			in.ready();
 			JSONObject dataset = new JSONObject();
 			dataset.put("Nom", nomJoueur);
-			
 			System.out.println("Ouverture client");
 			// Afficher msg server et récup idJoueur
 			JSONObject json = new JSONObject(EnvoiRequete(dataset));
 			String msg_welcome = (String) json.get("Message_Welcome");
 			System.out.println("Réponse serveur:"+msg_welcome);
 			int idJoueur = (int) json.get("IdPlayer");
-			
 			player = new Player(idJoueur,nomJoueur);
-				
 			} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
+	}
+	
+	public Player getPlayer(){return player;}
+	
+	public Room InfoRoom(){
+		Room room = null;
+		JSONObject dataset = new JSONObject();
+		try {
+			dataset.put("Methode", "InfoRoom");
+			String result = EnvoiRequete(dataset);
+			JSONObject json = new JSONObject(result);
+			int idRoom = json.getInt("idRoom");
+			int nbPlayerLife = json.getInt("nbPlayerLife");
+			int nbPlayerMax = json.getInt("nbPlayerMax");
+			int nbPlayer = json.getInt("nbPlayer");
+			ArrayList<Player> lPlayer = new ArrayList<Player>();
+			for(int i=0;i<nbPlayer;i++)
+			{
+				lPlayer.add(new Player(json.getInt("idPlayer"+i),json.getString("nomPlayer"+i),json.getBoolean("lifePlayer"+i),json.getBoolean("readyPlayer"+i)));
+			}
+			boolean roomFull = json.getBoolean("roomFull");
+			int jeton = json.getInt("jeton");
+			
+			room = new Room(idRoom, nbPlayerLife, nbPlayerMax, lPlayer, roomFull, jeton);
+			
+			System.out.println("JSON client: "+dataset);
+		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+		
+		return room;
+	}
+	
+	public void SelectPosition(int posBateau)
+	{
+		JSONObject dataset = new JSONObject();
+		try {
+			dataset.put("Methode", "SelectPosition");
+			dataset.put("idPlayer",player.getId());
+			dataset.put("posBateau", posBateau);
+			EnvoiRequete(dataset);
+			System.out.println("JSON client: "+dataset);
+		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 	}
 	
 	public int Shoot(int posTir)
