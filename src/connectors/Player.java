@@ -51,7 +51,7 @@ public class Player {
 		return life;
 	}
 	
-	public boolean getReady(){return ready;}
+	public boolean isReady(){return ready;}
 	public void setReady(boolean r){ready = r;}
 	
 }

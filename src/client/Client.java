@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +21,6 @@ public class Client {
 	private InputStreamReader isr; 
 	private BufferedReader in;
 	private Player player;
-	private boolean jeton; 
 	
 	public Client(String ip, int port, String nomJoueur){
 		try {

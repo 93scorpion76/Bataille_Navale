@@ -49,7 +49,7 @@ public class Room {
 		public int getNbPlayerMax(){return nbPlayerMax;}
 		public int getNbPlayerLife(){return nbPlayerLife;}
 		public int getNbPlayer(){return lPlayer.size();}
-		public boolean roomIsFull(){return roomFull;}
+		public boolean isFull(){return roomFull;}
 		public int getJeton(){return jeton;}
 		public void setJeton(int idPlayer){jeton = idPlayer;}
 		
@@ -84,5 +84,18 @@ public class Room {
 			if(retour.size()<1)
 				retour.add(0);
 			return retour;
+		}
+		
+		public boolean isStart()
+		{
+			// Si tous les players sont prêt alors la room est prête.
+			boolean start = false;
+			for(int i=0;i<lPlayer.size();i++)
+			{
+				if(lPlayer.get(i).isReady())
+					start = true;
+			}
+			
+			return start;
 		}
 }

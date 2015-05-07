@@ -31,7 +31,6 @@ public class ServerThread implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		boolean execute = true;
-		boolean part_start = false;
 		while(execute)
 		{
 			try{
@@ -49,14 +48,14 @@ public class ServerThread implements Runnable {
 					// Exécution de la méthode demandée	
 					PrintWriter out = new PrintWriter(lsock.get(s).getOutputStream(),true);
 					int idPlayer;
-					JSONArray ljson = new JSONArray();
 					JSONObject dataset = new JSONObject(); 
 					switch(msg_client)
 					{
-						case "InfoRoom":
-							if(room.getNbPlayer() == room.getNbPlayerMax() && part_start == false){
-								part_start = true;
-								room.setJeton(room.getPlayer(0).getId()); // On donne le premier jeton ! 
+						case "InfoRoom":		
+							if(room.getNbPlayer() == room.getNbPlayerMax()){
+								// est-ce que tous le joueurs sont prêt ? 
+								if(!room.isStart())
+									room.setJeton(room.getPlayer(0).getId()); // On donne le premier jeton ! 
 							}
 							// Reponse
 							dataset.put("idRoom",room.getIdRoom());
@@ -68,26 +67,26 @@ public class ServerThread implements Runnable {
 								dataset.put("idPlayer"+i,room.getPlayer(i).getId());
 								dataset.put("nomPlayer"+i,room.getPlayer(i).getNom());
 								dataset.put("lifePlayer"+i,room.getPlayer(i).getLife());
-								dataset.put("readyPlayer"+i,room.getPlayer(i).getReady());
+								dataset.put("readyPlayer"+i,room.getPlayer(i).isReady());
 							}	
-							dataset.put("roomFull",room.roomIsFull());
+							dataset.put("roomFull",room.isFull());
 							dataset.put("jeton",room.getJeton());
-							ljson.put(dataset);
-							out.println(ljson);
+							out.println(dataset);
 						break;
 					
 						case "SelectPosition":
 							// Lecture de l'idPlayer et de la posBateau. 
-							idPlayer = Integer.parseInt(json.getString("IdPlayer"));
+							idPlayer = Integer.parseInt(json.getString("idPlayer"));
 							int posBateau = Integer.parseInt(json.getString("posBateau"));
-							room.getPlayer(idPlayer).setPosBateau(posBateau);
-							out.println("OK");
-							
+							room.getPlayerById(idPlayer).setPosBateau(posBateau);
+							room.getPlayerById(idPlayer).setReady(true);
 							// Changement du jeton. 
-							if(idPlayer != room.getNbPlayerMax()-1)
+							if(idPlayer != room.getPlayer(room.getNbPlayerMax()-1).getId())
 								room.setJeton(idPlayer+1); 
 							else // Sinon, tout le monde a sélect sa pos, on redonne le jeton au premier. 
 								room.setJeton(room.getPlayer(0).getId());
+							
+							out.println("OK");
 						break;
 					
 						case "Shoot":
@@ -100,11 +99,10 @@ public class ServerThread implements Runnable {
 							// Préparation de la réponse: 
 							try {
 								dataset.put("Code", 1);
-								ljson.put(dataset);
 							} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 							
-							System.out.println(ljson);
-							out.println(ljson);
+							System.out.println(dataset);
+							out.println(dataset);
 							
 							if(idPlayer != room.getNbPlayerMax()-1)
 								room.setJeton(idPlayer+1);
@@ -122,7 +120,6 @@ public class ServerThread implements Runnable {
 					}
 				}
 
-				
 				/*// Lecture de la méthode demandée par le client:
 				InputStreamReader isr = new InputStreamReader(lsock.get(jeton).getInputStream());
 				BufferedReader in = new BufferedReader(isr);
