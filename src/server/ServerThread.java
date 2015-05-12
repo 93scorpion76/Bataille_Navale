@@ -66,7 +66,7 @@ public class ServerThread implements Runnable {
 							{
 								dataset.put("idPlayer"+i,room.getPlayer(i).getId());
 								dataset.put("nomPlayer"+i,room.getPlayer(i).getNom());
-								dataset.put("lifePlayer"+i,room.getPlayer(i).getLife());
+								dataset.put("lifePlayer"+i,room.getPlayer(i).isLife());
 								dataset.put("readyPlayer"+i,room.getPlayer(i).isReady());
 							}	
 							dataset.put("roomFull",room.isFull());
@@ -97,8 +97,13 @@ public class ServerThread implements Runnable {
 							room.CheckShoot(idPlayer,posTir);
 							
 							// Préparation de la réponse: 
+							// Liste des id des joueurs touchés
 							try {
-								dataset.put("Code", 1);
+								ArrayList<Integer> lShoot = room.CheckShoot(idPlayer, posTir);
+								dataset.put("NbPlayerDead",lShoot.size());
+								for(int i=0;i<lShoot.size();i++){
+									dataset.put("PlayerDead"+i, lShoot.get(i));
+								}	
 							} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 							
 							System.out.println(dataset);

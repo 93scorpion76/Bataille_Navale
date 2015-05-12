@@ -75,14 +75,12 @@ public class Room {
 			{		
 				if(lPlayer.get(i).getId()!=idPlayer)
 				{
-					if(lPlayer.get(i).getPosBateau() == posTir)
+					if(lPlayer.get(i).getPosBateau() == posTir && lPlayer.get(i).isLife())
 					{
 						retour.add(lPlayer.get(i).getId());
 					}
 				}
 			}
-			if(retour.size()<1)
-				retour.add(0);
 			return retour;
 		}
 		

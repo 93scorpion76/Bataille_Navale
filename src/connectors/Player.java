@@ -46,7 +46,7 @@ public class Player {
 		life = false;
 	}
 	
-	public boolean getLife()
+	public boolean isLife()
 	{
 		return life;
 	}

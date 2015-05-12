@@ -28,8 +28,10 @@ public class TestClient {
 					System.out.println("SELECTION DE LA POSITION BATEAU: OK !!!!");
 					break;
 				}
+				else if(r1.getJeton() != -1)
+					System.out.println("En attente... du joueur:"+r1.getPlayerById(r1.getJeton()).getNom());
 				else
-					System.out.println("En attente...");
+					System.out.println("En attente de joueurs");
 			}
 			else
 				System.out.println("Erreur réception JSON.");

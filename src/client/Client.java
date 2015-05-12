@@ -81,16 +81,27 @@ public class Client {
 		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 	}
 	
-	public int Shoot(int posTir)
+	public ArrayList<Integer> Shoot(int posTir)
 	{
 		JSONObject dataset = new JSONObject();
+		ArrayList<Integer> retour = new ArrayList<Integer>();
 		try {
 			dataset.put("Methode", "Shoot");
 			dataset.put("idPlayer",player.getId());
 			dataset.put("posTir", posTir);
-		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage()); return -1;}
+			
+			String result = EnvoiRequete(dataset);
+			JSONObject json = new JSONObject(result);
+			int nbPlayerDead = json.getInt("NbPlayerDead");
+			for(int i=0;i<nbPlayerDead;i++)
+			{
+				retour.add(json.getInt("PlayerDead"+i));
+			}
+			
+		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 		System.out.println("JSON client: "+dataset);
-		return (Integer.parseInt(EnvoiRequete(dataset)));	
+		
+		return (retour);	
 	}
 	
 	public void Exit()
