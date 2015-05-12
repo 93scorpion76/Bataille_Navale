@@ -23,10 +23,20 @@ public class Server {
 			int nbclient = 1;
 			ServerThread srvTh = new ServerThread(room);
 			ServerSocket srv = new ServerSocket(numPort);
-			
+			ArrayList<ServerThread> lThread = new ArrayList<ServerThread>();
+			lThread.add(srvTh);
 			System.out.println("Srv à l'écoute...");
 			while(true)
 			{	
+				for(int i=0;i<lThread.size();i++)
+				{
+					if(lThread.get(i).isExecute()){
+						nbclient--;
+						lThread.remove(i);
+						System.out.println("Un client vient de se déconnecter !");
+					}
+				}
+				
 				Socket sock = srv.accept();
 				System.out.println("Client n°"+nbclient+" connecté sur le port: "+sock.getPort()+".");
 				
@@ -41,6 +51,7 @@ public class Server {
 				{
 					room = new Room(nbRoom,2);
 					srvTh = new ServerThread(room);
+					lThread.add(srvTh);
 					nbRoom++;
 					room.AddPlayer(new Player(nbclient, nom_client));
 				}

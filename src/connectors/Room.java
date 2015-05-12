@@ -36,7 +36,7 @@ public class Room {
 			{
 				lPlayer.add(p1);
 				nbPlayerLife = lPlayer.size();
-				if(lPlayer.size()==4)
+				if(lPlayer.size()==nbPlayerMax)
 					roomFull = true;
 				return true;
 			}

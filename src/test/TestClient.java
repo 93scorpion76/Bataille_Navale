@@ -37,6 +37,7 @@ public class TestClient {
 				System.out.println("Erreur réception JSON.");
 		}
 		
+		c1.Exit();
 		
 	}
 
