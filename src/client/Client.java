@@ -139,11 +139,8 @@ public class Client{
 			
 			// Réception de la réponse du serveur
 			String rep_srv = in.readLine(); 
-<<<<<<< HEAD
-=======
 			
 			//System.out.println("\n Réponse serveur:"+rep_srv);
->>>>>>> 8385a27a3e75e006925e73f649840d4c96ccfdc9
 			
 			return rep_srv;
 		} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}

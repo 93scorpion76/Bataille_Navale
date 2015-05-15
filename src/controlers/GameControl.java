@@ -74,8 +74,8 @@ public class GameControl implements Runnable, Observateur{
 			
 			if(room.getJeton() != jeton)
 			{
-				/*if(!message.equals(""))
-				{*/
+				if(!message.equals(""))
+				{
 					if(room.CheckShoot(jeton, Integer.parseInt(message)).size() > 0)
 					{
 						ArrayList<Integer> listID = room.CheckShoot(jeton, Integer.parseInt(message));
@@ -94,7 +94,7 @@ public class GameControl implements Runnable, Observateur{
 						this.game.addMessage("\nLe joueur "+room.getPlayerById(jeton).getNom()+ " a mis dans l'eau");
 					}
 					
-				//}
+				}
 				
 				this.game.addMessage("\nC'est le tour du joueur "+room.getPlayerById(room.getJeton()).getNom());
 				
@@ -122,6 +122,12 @@ public class GameControl implements Runnable, Observateur{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		
+		if(room.isFinish())
+		{
+			this.game.enabledAllButton();
+			this.game.addMessage("Game Finish");
 		}
 	
 	} 

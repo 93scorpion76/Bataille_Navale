@@ -39,7 +39,7 @@ public class SalonView extends JFrame implements ActionListener, Observable{
 	{
 		this.player = player;
 		
-		this.setTitle("Bataille Navale");
+		this.setTitle("Bataille Navale "+player.getId());
 		this.setSize(1366/2, 725);
 		//this.setSize(1366, 725);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
