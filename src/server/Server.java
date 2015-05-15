@@ -15,58 +15,126 @@ import server.Server;
 import server.ServerThread;
 
 public class Server {
+	
+	private int nbClient;
+	private int nbRoom; 
+	private ArrayList<ServerThread> lThread;
+	private ServerSocket srv;
+
 	public Server(int numPort){
 		try {
-			int nbRoom = 0;
-			Room room = new Room(nbRoom,2);
-			nbRoom++;
-			int nbclient = 1;
-			ServerThread srvTh = new ServerThread(room);
-			ServerSocket srv = new ServerSocket(numPort);
+			nbClient = 1;
+			nbRoom = 1;
+			srv = new ServerSocket(numPort);
 			ArrayList<ServerThread> lThread = new ArrayList<ServerThread>();
-			lThread.add(srvTh);
-			System.out.println("Srv à l'écoute...");
+			
+			System.out.println("Serveur à l'écoute...");
 			while(true)
-			{	
+			{		
+				Socket sock = srv.accept();
+				
+				// Suppression des ROOM qui sont terminées. 
 				for(int i=0;i<lThread.size();i++)
 				{
 					if(lThread.get(i).isExecute() == false){
-						nbclient -= lThread.get(i).getRoom().getNbPlayerMax();
-						nbRoom--;
+						System.out.println("La room "+lThread.get(i).getRoom().getName()+" n°"+lThread.get(i).getRoom().getIdRoom()+" a été fermée !");
 						lThread.remove(i);
-						System.out.println("Une room vient de se fermer !");
 					}
 				}
-				
-				Socket sock = srv.accept();
-				System.out.println("Client n°"+nbclient+" connecté sur le port: "+sock.getPort()+".");
-				
-				// Lecture du nom du client
+
+				// Lecture de la méthode demandée par le client
 				InputStreamReader isr = new InputStreamReader(sock.getInputStream());
 				BufferedReader in = new BufferedReader(isr);
 				JSONObject json = new JSONObject(in.readLine());
-				String nom_client = (String) json.get("Nom");
+				String methode = json.getString("methode");
 				
-				// Ajout du joueur à la room.
-				if(!room.AddPlayer(new Player(nbclient, nom_client)))
-				{
-					room = new Room(nbRoom,2);
-					srvTh = new ServerThread(room);
-					lThread.add(srvTh);
-					nbRoom++;
-					room.AddPlayer(new Player(nbclient, nom_client));
-				}
-				
-				// Envoi d'un msg de bienvenu + de l'id du joueur associé à ce client.
 				PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
 				JSONObject dataset = new JSONObject();
-				String msg_welcome = "Bienvenu "+nom_client+" sur la room n°"+room.getIdRoom();
-				dataset.put("Message_Welcome",msg_welcome);
-				dataset.put("IdPlayer", nbclient);
-				out.println(dataset); // Envoi au client le fichier json
-				srvTh.AddSocket(sock);
-				new Thread(srvTh).start();
-				nbclient++;
+				ServerThread srvTh;
+				switch(methode)
+				{
+					case "joinRoom": // Rejoindre une room
+						String nomClient = json.getString("nomClient");
+						int idRoom = json.getInt("idRoom");
+						
+						String msgBack = "";
+						int idPlayer = -1;
+						// Récupération de la room
+						for(int i=0;i<lThread.size();i++)
+						{
+							if(lThread.get(i).getRoom().getIdRoom() == idRoom)
+							{
+								// Ajout du joueur à la room.
+								if(!lThread.get(i).getRoom().AddPlayer(new Player(nbClient,nomClient)))
+								{
+									// La room est complète ! 
+									msgBack = "Erreur, la room est complète !";
+									System.out.println(nomClient+" la room "+lThread.get(i).getRoom().getName() +" est complète ! Désolé.");
+								}
+								else
+								{
+									idPlayer = nbClient;
+									nbClient++;
+									msgBack = "Bienvenu "+nomClient+" sur la room "+lThread.get(i).getRoom().getName()+" n°"+lThread.get(i).getRoom().getIdRoom();
+									System.out.println(nomClient+" est le client n°"+idPlayer+" connecté sur le port: "+sock.getPort()+". Dans la room n°"+lThread.get(i).getRoom().getIdRoom());
+									lThread.get(i).AddSocket(sock);
+									new Thread(lThread.get(i)).start();
+								}
+								i = lThread.size(); // Sortie de boucle. 
+							}
+						}
+						
+						// Envoi du msg de retour + l'id du joueur associé à ce client. -1 si pas pu rejoindre la room.		
+						dataset.put("messageBack",msgBack);
+						dataset.put("idPlayer", idPlayer);
+						out.println(dataset); // Envoi au client le fichier json
+						break;
+				
+					case "createRoom": // Creer une room
+						String nameCreator = json.getString("nameCreator");
+						String nameRoom = json.getString("nameRoom");
+						int nbPlayer = json.getInt("nbPlayer");
+						Room room = new Room(nbRoom,nameRoom,nameCreator,nbPlayer);
+						nbRoom++;
+						// Création de la room
+						srvTh = new ServerThread(room);
+						lThread.add(srvTh);
+						System.out.println("La room "+nameRoom+" n°"+room.getIdRoom()+" a été créée !");
+						
+						// Le créateur rejoins automatiquement cette room ! 
+						idPlayer = nbClient;
+						nbClient++;
+						System.out.println(nameCreator+" est le client n°"+idPlayer+" connecté sur le port: "+sock.getPort()+". Dans la room n°"+room.getIdRoom());
+
+						room.AddPlayer(new Player(idPlayer, nameCreator));
+
+						msgBack = "Bienvenu "+nameCreator+" sur votre room "+room.getName()+" n°"+room.getIdRoom();
+						
+						// Envoi du msg retour + l'id du joueur associé à ce client.	
+						dataset.put("messageBack",msgBack);
+						dataset.put("idPlayer", idPlayer);
+						out.println(dataset); // Envoi au client le fichier json
+						
+						srvTh.AddSocket(sock);
+						new Thread(srvTh).start();
+						break;
+						
+						
+					case "listRoom": // Liste les rooms où il y a encore de la place.
+						dataset.put("nbRoom",lThread.size());
+						for(int i=0;i<lThread.size();i++)
+						{
+							if(!lThread.get(i).getRoom().isFull())
+							{
+								dataset.put("idRoom"+i,lThread.get(i).getRoom().getIdRoom());
+								dataset.put("nameRoom"+i,lThread.get(i).getClass().getName());
+								dataset.put("creator"+i,lThread.get(i).getRoom().getCreator());
+								dataset.put("nbPlayerMax"+i,lThread.get(i).getRoom().getNbPlayerMax());
+							}	
+						}
+						out.println(dataset); // Envoi au client le fichier json
+						break;
+				}
 			}
 		} catch (Exception e) {System.out.println("Erreur serveur:"+e.getMessage());}
 	}

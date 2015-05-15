@@ -14,7 +14,7 @@ public class ConnexionControl {
 	//Etablit une connexion au serveur
 	public ConnexionControl(String namePlayer)
 	{
-		cli = new Client("localhost",1234, namePlayer);
+		//cli = new Client("localhost",1234, namePlayer);
 		
 		Player myPlayer = cli.getPlayer();
 		salon = new SalonView(myPlayer);

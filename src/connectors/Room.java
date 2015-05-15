@@ -8,13 +8,15 @@ import view.SalonView;
 
 public class Room{
 		private int idRoom;
+		private String name;
+		private String creator;
 		private int nbPlayerLife; // nb de joueur encore en vie. Permet de détecter la victoire. 
 		private int nbPlayerMax; 
 		private ArrayList<Player> lPlayer;
 		private boolean roomFull;
 		private int jeton; // Contient l'id du player qui a le jeton.
 		
-		public Room(int idRoom,int nbPlayerMax)
+		public Room(int idRoom,String name,String creator, int nbPlayerMax)
 		{
 			lPlayer = new ArrayList<Player>();
 			roomFull = false;
@@ -22,9 +24,11 @@ public class Room{
 			nbPlayerLife = 0;
 			this.nbPlayerMax = nbPlayerMax;
 			jeton = -1;
+			this.name = name;
+			this.creator = creator;
 		}
 		
-		public Room(int idRoom, int nbPlayerLife, int nbPlayerMax, ArrayList<Player> lPlayer,boolean roomFull,int jeton)
+		public Room(int idRoom, String name, String creator, int nbPlayerLife, int nbPlayerMax, ArrayList<Player> lPlayer,boolean roomFull,int jeton)
 		{
 			this.idRoom = idRoom;
 			this.nbPlayerLife = nbPlayerLife;
@@ -32,6 +36,8 @@ public class Room{
 			this.lPlayer = lPlayer;
 			this.roomFull = roomFull;
 			this.jeton = jeton;
+			this.name = name;
+			this.creator = creator;
 		}
 		
 		public boolean AddPlayer(Player p1)
@@ -65,11 +71,16 @@ public class Room{
 					j = lPlayerLife.size(); // sortie de boucle.
 				}
 			}
-			return lPlayerLife.get(posJ).getId();
+			if(lPlayerLife.size()<=0)
+				return -1;
+			else 
+				return lPlayerLife.get(posJ).getId();
 		}
 		
 		public void setRoomFull(boolean roomFull) {this.roomFull = roomFull;}		
 		public int getIdRoom() {return idRoom;}
+		public String getName(){return name;}
+		public String getCreator(){return creator;}
 		public int getNbPlayerMax(){return nbPlayerMax;}
 		public int getNbPlayerLife(){return nbPlayerLife;}
 		public int getNbPlayer(){return lPlayer.size();}
@@ -128,7 +139,6 @@ public class Room{
 					if(!lPlayer.get(i).isReady())
 						start = false;
 				}
-			
 			}
 			else
 			{
