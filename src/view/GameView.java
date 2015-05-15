@@ -1,7 +1,9 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,19 +15,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import modele.ActionButton;
+import modele.PanneauColor;
+import modele.SmallButton;
 import connectors.Player;
 import observer.Observable;
 import observer.Observateur;
 
 public class GameView extends JFrame implements ActionListener, Observable{
 
-	private JButton[]chooseCible;
+	private ActionButton[]chooseCible;
 	
-	private JPanel leftPan;
-	private JPanel rightPan;
+	private PanneauColor leftPan;
+	private PanneauColor rightPan;
 	private JPanel centerPan;
 	
-	private JButton exit;
+	private SmallButton exit;
 	private JTextArea text;
 	//private JScrollPane scroll = new JScrollPane(tableau);
 	
@@ -33,11 +38,13 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	private ArrayList<Observateur> listObservateur = new ArrayList<Observateur>();
 	private Player player;
 	
+	private int sizeWidth = 1366/2;
+	private int sizeHeight = 725;
+	
 	public GameView(Player player)
 	{
 		this.setTitle("Bataille Navale : "+player.getNom()+" - "+player.getId());
-		this.setSize(1366/2, 725);
-		//this.setSize(1366, 725);
+		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
@@ -48,11 +55,14 @@ public class GameView extends JFrame implements ActionListener, Observable{
 			this.setIconImage(Image);
 		*/
 		
-		leftPan = new JPanel(new BorderLayout());
-		rightPan = new JPanel();
+		leftPan = new PanneauColor(1);
+		leftPan.setLayout(new BorderLayout());
+		rightPan = new PanneauColor(2);
 		centerPan = new JPanel();
 		text= new JTextArea(5,30);
-		chooseCible=new JButton[16];
+		chooseCible=new ActionButton[16];
+	
+		text.setFont(new Font("Serif", Font.BOLD, 20));
 		
 		//left 
 		JScrollPane scrollPane = new JScrollPane(text);
@@ -62,24 +72,27 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		text.setEditable(false);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		exit= new JButton("Quitter");
-		exit.setPreferredSize(new Dimension(20, 200));
+		exit = new SmallButton("Quitter");
+		exit.setPreferredSize(new Dimension(sizeWidth/2,sizeHeight/15));
+		JPanel panTmp =  new JPanel(new BorderLayout());
+		panTmp.add(exit, BorderLayout.SOUTH);
 		exit.addActionListener(this);
 		
-		leftPan.add(exit, BorderLayout.PAGE_START);
 		leftPan.add(scrollPane, BorderLayout.CENTER);
+		leftPan.add(exit, BorderLayout.PAGE_END);
 		
 		//right
 		GridLayout gl = new GridLayout(4,4);
 		gl.setHgap(20);
 		gl.setVgap(20);
 		rightPan.setLayout(gl);
-		
+
+		ActionButton.setChoose(false);
 		int tmp;
 		for(int i = 0; i < 16; i++)
 		{
 			tmp = i+1;
-			chooseCible[i] = new JButton("Cible "+tmp);
+			chooseCible[i] = new ActionButton(""+tmp);
 			chooseCible[i].addActionListener(this);
 			rightPan.add(chooseCible[i]);
 		}
@@ -94,6 +107,8 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		this.setContentPane(centerPan);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+		
+		text.setOpaque(false);
 	}
 	
 	public Player getPlayer() {
@@ -135,8 +150,7 @@ public class GameView extends JFrame implements ActionListener, Observable{
 			{
 				if(event.getSource() == this.chooseCible[i])
 				{
-					i++;
-					updateObservateur(""+i);
+					updateObservateur(""+chooseCible[i].getPosition());
 					i = 16;
 				}
 			}
@@ -171,4 +185,9 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		listObservateur = new ArrayList<Observateur>();
 	}
 
+	public ActionButton getActionButton(int id)
+	{
+		int tmp = id-1;
+		return chooseCible[tmp];
+	}
 }

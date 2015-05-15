@@ -36,20 +36,14 @@ public class GameControl implements Runnable, Observateur{
 			message = appel;
 			ArrayList<Integer> listID = cli.Shoot(Integer.parseInt(appel));
 			
-			/*if(listID.size() == 0)
-				message = "Le joueur "+room.getPlayerById(room.getJeton()).getNom()+ " a mis dans l'eau";
+			if(listID.size() == 0)
+			{
+				this.game.getActionButton(Integer.parseInt(appel)).changeInvisible();
+			}
 			else
 			{
-				String playerTouch = "";
-				for(int i = 0; i < listID.size(); i++)
-				{
-					playerTouch += room.getPlayerById(listID.get(i)).getNom();
-					if(i+1 < listID.size())
-						playerTouch += ", ";
-				}
-
-				message = "Le joueur "+room.getPlayerById(room.getJeton()).getNom()+ " a touché "+playerTouch+" .";
-			}*/
+				this.game.getActionButton(Integer.parseInt(appel)).changeDebris();
+			}
 		}
 		else if(string.equals("exit"))
 		{

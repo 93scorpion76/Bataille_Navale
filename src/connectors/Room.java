@@ -144,6 +144,7 @@ public class Room{
 			{
 				start = false;
 			}
+			
 			return start;
 		}
 

@@ -61,8 +61,7 @@ public class ConnexionView extends JFrame implements ActionListener, KeyListener
 		//this.Game.setHorizontalTextPosition(JLabel.CENTER);
 		this.connexionGame.setBounds(0,543,793,40);
 		this.nameFT.setBounds(352,400,100,80);
-		this.nameFT.setOpaque(false);
-		this.nameFT.setForeground(Color.white);
+		this.nameFT.setBackground(Color.getHSBColor(187, 93, 52));
 		this.nameFT.setFont(new Font("Serif", Font.BOLD, 36));
 		this.nameFT.addKeyListener(this);
 		this.nameFT.requestFocus();
