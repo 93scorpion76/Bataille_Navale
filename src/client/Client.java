@@ -82,13 +82,13 @@ public class Client{
 			dataset.put("idPlayer",player.getId());
 			dataset.put("posBateau", posBateau);
 			EnvoiRequete(dataset);
-			System.out.println("JSON client: "+dataset);
+			//System.out.println("JSON client: "+dataset);
 		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 	}
 	
 	public ArrayList<Integer> Shoot(int posTir)
 	{
-		System.out.print("\t shoot client");
+		//System.out.print("\t shoot client");
 		JSONObject dataset = new JSONObject();
 		ArrayList<Integer> retour = new ArrayList<Integer>();
 		try {
@@ -96,7 +96,7 @@ public class Client{
 			dataset.put("idPlayer",player.getId());
 			dataset.put("posTir", posTir);
 			
-			System.out.println("\nA envoyer JSON client: "+dataset);
+			//System.out.println("\nA envoyer JSON client: "+dataset);
 			
 			String result = EnvoiRequete(dataset);
 			JSONObject json = new JSONObject(result);
@@ -104,12 +104,12 @@ public class Client{
 			for(int i=0;i<nbPlayerDead;i++)
 			{
 				retour.add(json.getInt("PlayerDead"+i));
-				System.out.print("touch "+json.getInt("PlayerDead"+i));
+				//System.out.print("touch "+json.getInt("PlayerDead"+i));
 			}
 			
 			
 		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
-		System.out.println("JSON client: "+dataset);
+		//System.out.println("JSON client: "+dataset);
 		
 		return (retour);	
 	}
@@ -120,8 +120,9 @@ public class Client{
 			JSONObject dataset = new JSONObject();
 			try {
 				dataset.put("Methode", "Exit");
+				dataset.put("idPlayer",player.getId());
 			} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
-			System.out.println("JSON client: "+dataset);
+			System.out.println("JSON client: "+dataset);	
 			EnvoiRequete(dataset);
 			sock.close();
 			in.close();	
@@ -133,14 +134,13 @@ public class Client{
 	private String EnvoiRequete(JSONObject dataset)
 	{
 		try {
-			System.out.print("\n envoi au serveur 1 ");
 			PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
 			out.println(dataset); // Envoi au srv du fichier json
-			System.out.print("\n envoi au serveur 2 ");
 			
 			// Réception de la réponse du serveur
 			String rep_srv = in.readLine(); 
-			System.out.println("\n Réponse serveur:"+rep_srv);
+			
+			//System.out.println("\n Réponse serveur:"+rep_srv);
 			
 			return rep_srv;
 		} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}

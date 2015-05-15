@@ -17,10 +17,8 @@ public class TestClient {
 
 		while(true)
 		{
-			Room r1 = c1.InfoRoom();
-			
-			System.out.println("Id ROOM r1:"+r1.getIdRoom());
-			
+			Room r1 = c1.InfoRoom();	
+
 			if(r1 != null)
 			{
 				if(r1.getJeton() == p1.getId()){	
@@ -31,13 +29,12 @@ public class TestClient {
 				else if(r1.getJeton() != -1)
 					System.out.println("En attente... du joueur:"+r1.getPlayerById(r1.getJeton()).getNom());
 				else
-					System.out.println("En attente de joueurs");
+					System.out.println("En attente de joueurs. Room:"+r1.getIdRoom());
 			}
 			else
 				System.out.println("Erreur réception JSON.");
-		}
-		
-		
+		}	
+		c1.Exit();
 	}
 
 }

@@ -93,10 +93,8 @@ public class ServerThread implements Runnable {
 					
 						case "Shoot":
 							// Lecture de l'idPlayer et de la posTir. 
-							idPlayer = Integer.parseInt(json.getString("IdPlayer"));
+							idPlayer = Integer.parseInt(json.getString("idPlayer"));
 							int posTir = Integer.parseInt(json.getString("posTir"));
-							
-							room.CheckShoot(idPlayer,posTir);
 							
 							// Préparation de la réponse: 
 							// Liste des id des joueurs touchés
@@ -108,7 +106,7 @@ public class ServerThread implements Runnable {
 								}	
 							} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 							
-							System.out.println(dataset);
+							//System.out.println(dataset);
 							out.println(dataset);
 							
 							if(idPlayer != room.getNbPlayerMax()-1)
@@ -118,12 +116,21 @@ public class ServerThread implements Runnable {
 						break;
 						
 						case "Exit":
+							idPlayer = Integer.parseInt(json.getString("idPlayer"));
 							System.out.println("Fermeture du serveur pour le port:"+lsock.get(s).getLocalPort());
 							out.println("Tchao");
 							out.close();
 							lsock.get(s).close();	
 							
-							execute = false;
+							room.getPlayer(idPlayer).Kill();
+							
+							boolean SockLife = false;
+							for(int i=0;i<lsock.size();i++){
+								if(lsock.get(i).isClosed()==false)
+									SockLife = true;
+							}
+							if(SockLife)
+								execute = false;
 							break;
 					}
 				}

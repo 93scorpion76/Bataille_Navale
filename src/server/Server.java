@@ -30,7 +30,7 @@ public class Server {
 			{	
 				for(int i=0;i<lThread.size();i++)
 				{
-					if(lThread.get(i).isExecute()){
+					if(lThread.get(i).isExecute() == false){
 						nbclient--;
 						lThread.remove(i);
 						System.out.println("Un client vient de se déconnecter !");
