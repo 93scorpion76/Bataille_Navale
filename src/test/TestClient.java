@@ -33,8 +33,16 @@ public class TestClient {
 			}
 			else
 				System.out.println("Erreur réception JSON.");
+<<<<<<< HEAD
+			
+			c1.Exit();
+		}
+		
+		
+=======
 		}	
 		c1.Exit();
+>>>>>>> 8385a27a3e75e006925e73f649840d4c96ccfdc9
 	}
 
 }

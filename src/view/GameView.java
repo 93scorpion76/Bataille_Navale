@@ -35,7 +35,7 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	
 	public GameView(Player player)
 	{
-		this.setTitle("Bataille Navale : "+player.getNom());
+		this.setTitle("Bataille Navale : "+player.getNom()+" - "+player.getId());
 		this.setSize(1366/2, 725);
 		//this.setSize(1366, 725);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,6 +118,11 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		}
 	}
 	
+	public boolean getButtonEnabled()
+	{
+		return chooseCible[0].isEnabled();
+	}
+	
 	public void actionPerformed(ActionEvent event) {
 		// TODO Auto-generated method stub
 		if(event.getSource() == exit)
@@ -138,6 +143,11 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		}
 	}
 
+	public void addMessage(String message)
+	{
+		text.append(message);
+	}
+	
 	@Override
 	public void addObservateur(Observateur obs) {
 		// TODO Auto-generated method stub
