@@ -27,7 +27,6 @@ public class ServerThread implements Runnable {
 		lsock.add(socket);
 	}
 
-	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		boolean execute = true;
@@ -39,16 +38,20 @@ public class ServerThread implements Runnable {
 				{
 					// On démarre la partie. 		
 					// Lecture de la méthode demandée par le client:
+					System.out.print("\nici serv 1");
 					InputStreamReader isr = new InputStreamReader(lsock.get(s).getInputStream());
 					BufferedReader in = new BufferedReader(isr);
 					
+					System.out.print("ici serv 2");
 					JSONObject json = new JSONObject(in.readLine());
 					String msg_client = (String) json.get("Methode");
-					
+					System.out.print("ici serv3");
 					// Exécution de la méthode demandée	
 					PrintWriter out = new PrintWriter(lsock.get(s).getOutputStream(),true);
 					int idPlayer;
 					JSONObject dataset = new JSONObject(); 
+					
+					System.out.print("\n"+msg_client);
 					switch(msg_client)
 					{
 						case "InfoRoom":		
@@ -91,18 +94,22 @@ public class ServerThread implements Runnable {
 					
 						case "Shoot":
 							// Lecture de l'idPlayer et de la posTir. 
+							System.out.print("\navant serv shoot");
 							idPlayer = Integer.parseInt(json.getString("IdPlayer"));
+							System.out.print("\nentredeux");
 							int posTir = Integer.parseInt(json.getString("posTir"));
-							
-							room.CheckShoot(idPlayer,posTir);
+							System.out.print("\nici serv shoot");
+							//room.CheckShoot(idPlayer,posTir);
 							
 							// Préparation de la réponse: 
 							// Liste des id des joueurs touchés
 							try {
 								ArrayList<Integer> lShoot = room.CheckShoot(idPlayer, posTir);
+								System.out.print("\nafter checkout");
 								dataset.put("NbPlayerDead",lShoot.size());
 								for(int i=0;i<lShoot.size();i++){
 									dataset.put("PlayerDead"+i, lShoot.get(i));
+									System.out.print("PlayerDead-"+i+" :"+lShoot.get(i));
 								}	
 							} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 							

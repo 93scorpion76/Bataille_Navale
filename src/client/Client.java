@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import connectors.Player;
 import connectors.Room;
 
-public class Client {
+public class Client{
 
 	private Socket sock; 
 	private InputStreamReader isr; 
@@ -63,12 +63,17 @@ public class Client {
 			
 			room = new Room(idRoom, nbPlayerLife, nbPlayerMax, lPlayer, roomFull, jeton);
 			
-			System.out.println("JSON client: "+dataset);
+			//System.out.println("JSON client: "+dataset);
+			
 		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 		
 		return room;
 	}
 	
+	public Socket getSock() {
+		return sock;
+	}
+
 	public void SelectPosition(int posBateau)
 	{
 		JSONObject dataset = new JSONObject();
@@ -83,6 +88,7 @@ public class Client {
 	
 	public ArrayList<Integer> Shoot(int posTir)
 	{
+		System.out.print("\t shoot client");
 		JSONObject dataset = new JSONObject();
 		ArrayList<Integer> retour = new ArrayList<Integer>();
 		try {
@@ -90,13 +96,17 @@ public class Client {
 			dataset.put("idPlayer",player.getId());
 			dataset.put("posTir", posTir);
 			
+			System.out.println("\nA envoyer JSON client: "+dataset);
+			
 			String result = EnvoiRequete(dataset);
 			JSONObject json = new JSONObject(result);
 			int nbPlayerDead = json.getInt("NbPlayerDead");
 			for(int i=0;i<nbPlayerDead;i++)
 			{
 				retour.add(json.getInt("PlayerDead"+i));
+				System.out.print("touch "+json.getInt("PlayerDead"+i));
 			}
+			
 			
 		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 		System.out.println("JSON client: "+dataset);
@@ -116,20 +126,21 @@ public class Client {
 			sock.close();
 			in.close();	
 			System.out.println("Fermeture du client.");
-		} catch (IOException e) {System.out.println("Erreur fermeture client:"+e.getMessage());}
+		} catch (IOException e) {System.out.println("Erreur fermeture client : "+e.getMessage());}
 	}
 	
 	
 	private String EnvoiRequete(JSONObject dataset)
 	{
 		try {
-			
+			System.out.print("\n envoi au serveur 1 ");
 			PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
 			out.println(dataset); // Envoi au srv du fichier json
-				
+			System.out.print("\n envoi au serveur 2 ");
+			
 			// Réception de la réponse du serveur
 			String rep_srv = in.readLine(); 
-			System.out.println("Réponse serveur:"+rep_srv);
+			System.out.println("\n Réponse serveur:"+rep_srv);
 			
 			return rep_srv;
 		} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}

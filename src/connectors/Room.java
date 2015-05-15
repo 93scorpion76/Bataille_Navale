@@ -2,7 +2,11 @@ package connectors;
 
 import java.util.ArrayList;
 
-public class Room {
+import observer.Observable;
+import observer.Observateur;
+import view.SalonView;
+
+public class Room{
 		private int idRoom;
 		private int nbPlayerLife; // nb de joueur encore en vie. Permet de détecter la victoire. 
 		private int nbPlayerMax; 
@@ -36,7 +40,7 @@ public class Room {
 			{
 				lPlayer.add(p1);
 				nbPlayerLife = lPlayer.size();
-				if(lPlayer.size()==4)
+				if(lPlayer.size()==nbPlayerMax)
 					roomFull = true;
 				return true;
 			}
@@ -44,7 +48,7 @@ public class Room {
 				return false;
 		}
 		
-		public void setRoomFull(boolean roomFull) {roomFull = roomFull;}		
+		public void setRoomFull(boolean roomFull) {this.roomFull = roomFull;}		
 		public int getIdRoom() {return idRoom;}
 		public int getNbPlayerMax(){return nbPlayerMax;}
 		public int getNbPlayerLife(){return nbPlayerLife;}
@@ -52,6 +56,13 @@ public class Room {
 		public boolean isFull(){return roomFull;}
 		public int getJeton(){return jeton;}
 		public void setJeton(int idPlayer){jeton = idPlayer;}
+		public boolean isFinish()
+		{
+			if(getNbPlayerLife() <= 1)
+				return true;
+			else 
+				return false;
+		}
 		
 		public Player getPlayerById(int idPlayer)
 		{
@@ -71,6 +82,8 @@ public class Room {
 		public ArrayList<Integer> CheckShoot(int idPlayer, int posTir)
 		{
 			ArrayList<Integer> retour = new ArrayList<Integer>(); // Retour la liste des idJoueur morts ou 0 si aucun joueur touchés.
+			
+			System.out.print("\ntaille : "+lPlayer.size());
 			for(int i=0;i<lPlayer.size();i++)
 			{		
 				if(lPlayer.get(i).getId()!=idPlayer)
@@ -87,13 +100,21 @@ public class Room {
 		public boolean isStart()
 		{
 			// Si tous les players sont prêt alors la room est prête.
-			boolean start = false;
-			for(int i=0;i<lPlayer.size();i++)
-			{
-				if(lPlayer.get(i).isReady())
-					start = true;
-			}
+			boolean start;
+			if(lPlayer.size() >= 2){
+				start = true;
+				for(int i=0;i<lPlayer.size();i++)
+				{
+					if(!lPlayer.get(i).isReady())
+						start = false;
+				}
 			
+			}
+			else
+			{
+				start = false;
+			}
 			return start;
 		}
+
 }

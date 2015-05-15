@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,7 +13,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class GameView extends JFrame implements ActionListener{
+import connectors.Player;
+import observer.Observable;
+import observer.Observateur;
+
+public class GameView extends JFrame implements ActionListener, Observable{
 
 	private JButton[]chooseCible;
 	
@@ -24,12 +29,19 @@ public class GameView extends JFrame implements ActionListener{
 	private JTextArea text;
 	//private JScrollPane scroll = new JScrollPane(tableau);
 	
-	public GameView()
+	//Création collection d'observateur
+	private ArrayList<Observateur> listObservateur = new ArrayList<Observateur>();
+	private Player player;
+	
+	public GameView(Player player)
 	{
-		this.setTitle("Bataille Navale");
-		this.setSize(1366, 725);
+		this.setTitle("Bataille Navale : "+player.getNom());
+		this.setSize(1366/2, 725);
+		//this.setSize(1366, 725);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		
+		this.player = player;
 		/* image
 			ImageIcon ImageIcon = new ImageIcon("icone.jpg");
 			Image Image = ImageIcon.getImage();
@@ -84,9 +96,69 @@ public class GameView extends JFrame implements ActionListener{
 		this.setVisible(true);
 	}
 	
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void enabledAllButton()
+	{
+		for(int i = 0; i < 16; i++)
+		{
+			chooseCible[i].setEnabled(!chooseCible[i].isEnabled());
+		}
+	}
+	
+	public void enabledAllButtonIDPlayer(int id)
+	{
+		if(id == player.getId()){
+			for(int i = 0; i < 16; i++)
+			{
+				chooseCible[i].setEnabled(!chooseCible[i].isEnabled());
+			}
+		}
+	}
+	
 	public void actionPerformed(ActionEvent event) {
 		// TODO Auto-generated method stub
-		
+		if(event.getSource() == exit)
+		{
+			updateObservateur("exit");
+		}
+		else
+		{
+			for(int i =0; i < this.chooseCible.length; i++)
+			{
+				if(event.getSource() == this.chooseCible[i])
+				{
+					i++;
+					updateObservateur(""+i);
+					i = 16;
+				}
+			}
+		}
+	}
+
+	@Override
+	public void addObservateur(Observateur obs) {
+		// TODO Auto-generated method stub
+		listObservateur.add(obs);
+	}
+
+	@Override
+	public void updateObservateur(String appel) {
+		// TODO Auto-generated method stub
+		for(Observateur obs : this.listObservateur ){
+			if(appel.equals("exit"))
+					obs.update(appel, "");
+			else	
+					obs.update("shoot", appel);
+			}
+	}
+
+	@Override
+	public void delObservateur() {
+		// TODO Auto-generated method stub
+		listObservateur = new ArrayList<Observateur>();
 	}
 
 }

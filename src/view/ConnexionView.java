@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import controlers.ConnexionControl;
+
 public class ConnexionView extends JFrame implements ActionListener{
 	
 	private JLabel nameLab = new JLabel("Votre pseudo : ");
@@ -55,8 +57,8 @@ public class ConnexionView extends JFrame implements ActionListener{
 		{
 			if(nameFT.getText() != "" && nameFT.getText().length() <= 10 && nameFT.getText().length() >=2)
 			{
-				new SalonView();
 				this.dispose();
+				new ConnexionControl(nameFT.getText());
 			}
 		}
 	}
