@@ -7,7 +7,6 @@ public class ThreadGames implements Runnable{
 	public ThreadGames()
 	{
 		
-		
 	}
 	
 	@Override

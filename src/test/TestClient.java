@@ -22,7 +22,7 @@ public class TestClient {
 			if(r1 != null)
 			{
 				if(r1.getJeton() == p1.getId()){	
-					c1.SelectPosition(2);
+					c1.SelectPosition(4);
 					System.out.println("SELECTION DE LA POSITION BATEAU: OK !!!!");
 					break;
 				}
@@ -33,9 +33,25 @@ public class TestClient {
 			}
 			else
 				System.out.println("Erreur réception JSON.");
-		
 			c1.Exit();
 		}
+		while(true)
+		{
+			Room r2 = c1.InfoRoom();
+			if(r2!=null)
+			{
+				if(r2.getJeton() == p1.getId())
+				{
+					c1.Shoot(2);
+					System.out.println("TIR POS 2");
+					break;
+				}
+				else if(r2.getJeton() != -1)
+					System.out.println("En attente de joueur:"+r2.getPlayerById(r2.getJeton()).getNom());
+			}
+		}
+		
+		c1.Exit();
 	}
 
 }

@@ -109,7 +109,6 @@ public class GameControl implements Runnable, Observateur{
 							this.game.enabledAllButtonIDPlayer(room.getJeton());
 					}
 				}
-				
 				this.message = "";
 			}
 			

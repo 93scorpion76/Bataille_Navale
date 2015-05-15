@@ -88,7 +88,6 @@ public class Client{
 	
 	public ArrayList<Integer> Shoot(int posTir)
 	{
-		//System.out.print("\t shoot client");
 		JSONObject dataset = new JSONObject();
 		ArrayList<Integer> retour = new ArrayList<Integer>();
 		try {
@@ -104,13 +103,10 @@ public class Client{
 			for(int i=0;i<nbPlayerDead;i++)
 			{
 				retour.add(json.getInt("PlayerDead"+i));
-				//System.out.print("touch "+json.getInt("PlayerDead"+i));
 			}
 			
 			
 		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
-		//System.out.println("JSON client: "+dataset);
-		
 		return (retour);	
 	}
 	
@@ -130,6 +126,18 @@ public class Client{
 		} catch (IOException e) {System.out.println("Erreur fermeture client : "+e.getMessage());}
 	}
 	
+	public String LastAction()
+	{
+		JSONObject dataset = new JSONObject();
+		String retour = "";
+		try {
+			dataset.put("Methode", "LastAction");
+			String result = EnvoiRequete(dataset);
+			JSONObject json = new JSONObject(result);
+			retour = json.getString("LastAction");
+		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+		return retour;
+	}
 	
 	private String EnvoiRequete(JSONObject dataset)
 	{
@@ -139,9 +147,9 @@ public class Client{
 			
 			// Réception de la réponse du serveur
 			String rep_srv = in.readLine(); 
-			
+		
 			//System.out.println("\n Réponse serveur:"+rep_srv);
-			
+		
 			return rep_srv;
 		} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}
 	}

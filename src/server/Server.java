@@ -31,9 +31,10 @@ public class Server {
 				for(int i=0;i<lThread.size();i++)
 				{
 					if(lThread.get(i).isExecute() == false){
-						nbclient--;
+						nbclient -= lThread.get(i).getRoom().getNbPlayerMax();
+						nbRoom--;
 						lThread.remove(i);
-						System.out.println("Un client vient de se déconnecter !");
+						System.out.println("Une room vient de se fermer !");
 					}
 				}
 				
