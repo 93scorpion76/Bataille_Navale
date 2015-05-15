@@ -36,7 +36,6 @@ public class ServerThread implements Runnable {
 		while(execute)
 		{
 			try{
-				
 				for(int s=0;s<lsock.size();s++)
 				{
 					// On démarre la partie. 		
@@ -107,7 +106,8 @@ public class ServerThread implements Runnable {
 							out.println(dataset);
 							
 							// Changement du jeton
-							room.setJeton(room.NextPlayer(idPlayer));							
+							room.setJeton(room.NextPlayer(idPlayer));		
+							System.out.println(room.getJeton());
 						break;
 						
 						case "Exit":

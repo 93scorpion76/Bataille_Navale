@@ -88,7 +88,6 @@ public class Client{
 	
 	public ArrayList<Integer> Shoot(int posTir)
 	{
-		//System.out.print("\t shoot client");
 		JSONObject dataset = new JSONObject();
 		ArrayList<Integer> retour = new ArrayList<Integer>();
 		try {
@@ -104,13 +103,10 @@ public class Client{
 			for(int i=0;i<nbPlayerDead;i++)
 			{
 				retour.add(json.getInt("PlayerDead"+i));
-				//System.out.print("touch "+json.getInt("PlayerDead"+i));
 			}
 			
 			
 		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
-		//System.out.println("JSON client: "+dataset);
-		
 		return (retour);	
 	}
 	

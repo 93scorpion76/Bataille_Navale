@@ -50,7 +50,6 @@ public class Room{
 		
 		public int NextPlayer(int idPlayer)  // Renvoi l'id du prochain joueur en vie dans la liste.
 		{
-			int retour = 0;
 			ArrayList<Player> lPlayerLife = new ArrayList<Player>(); // Création d'un tablau répertoriant les joueurs en vie.
 			for(int i=0; i<lPlayer.size();i++)
 			{
@@ -61,7 +60,8 @@ public class Room{
 			int posJ = 0;
 			for(int j=0;j<lPlayerLife.size();j++){
 				if(lPlayerLife.get(j).getId() == idPlayer){
-					posJ = j++;
+					if(j+1<lPlayerLife.size())
+						posJ = j+1;
 					j = lPlayerLife.size(); // sortie de boucle.
 				}
 			}
@@ -104,13 +104,13 @@ public class Room{
 		{
 			ArrayList<Integer> retour = new ArrayList<Integer>(); // Retour la liste des idJoueur morts ou 0 si aucun joueur touchés.
 			
-			System.out.print("\ntaille : "+lPlayer.size());
 			for(int i=0;i<lPlayer.size();i++)
 			{		
 				if(lPlayer.get(i).getId()!=idPlayer)
 				{
 					if(lPlayer.get(i).getPosBateau() == posTir && lPlayer.get(i).isLife())
 					{
+						lPlayer.get(i).Kill();
 						retour.add(lPlayer.get(i).getId());
 					}
 				}
