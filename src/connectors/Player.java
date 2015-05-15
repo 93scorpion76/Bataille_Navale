@@ -30,7 +30,7 @@ public class Player {
 	}
 
 	public void setPosBateau(int posBateau) {
-		PosBateau = posBateau;
+		this.PosBateau = posBateau;
 	}
 
 	public int getId() {

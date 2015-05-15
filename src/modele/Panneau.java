@@ -23,5 +23,6 @@ public class Panneau extends JPanel{
 		    } catch (IOException e) {
 		      e.printStackTrace();
 		    }                
-	}        
+	}    
+	
 }

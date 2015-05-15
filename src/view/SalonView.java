@@ -1,16 +1,24 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import modele.ActionButton;
+import modele.CaseACocher;
+import modele.PanneauColor;
+import modele.SmallButton;
 import observer.Observable;
 import observer.Observateur;
 import connectors.Player;
@@ -18,19 +26,22 @@ import controlers.ThreadClient;
 
 public class SalonView extends JFrame implements ActionListener, Observable{
 	
-	private JPanel rightPan;
-	private JPanel leftPan;
+	private PanneauColor rightPan;
+	private PanneauColor leftPan;
 	private JPanel centerPan;
 	
-	private JButton[]chooseBoat;
+	private ActionButton[]chooseBoat;
 	
 	private JLabel[]namePlayer;
-	private JButton[] isReady;
+	private CaseACocher[] isReady;
 	
-	private JButton ready = new JButton("Prêt");
-	private JButton exit = new JButton("Quitter");
+	private SmallButton ready = new SmallButton("Prêt");
+	private SmallButton exit = new SmallButton("Quitter");
 	
 	private static Player player;
+	
+	private int sizeWidth = 1366/2;
+	private int sizeHeight = 725;
 	
 	//Création collection d'observateur
 	private ArrayList<Observateur> listObservateur = new ArrayList<Observateur>();
@@ -40,33 +51,39 @@ public class SalonView extends JFrame implements ActionListener, Observable{
 		this.player = player;
 		
 		this.setTitle("Bataille Navale "+player.getId());
-		this.setSize(1366/2, 725);
-		//this.setSize(1366, 725);
+		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		this.setResizable(false);
 		/* image
 			ImageIcon ImageIcon = new ImageIcon("icone.jpg");
 			Image Image = ImageIcon.getImage();
 			this.setIconImage(Image);
 		 */
 		//this.Game.setHorizontalAlignment();
-		chooseBoat = new JButton[16];
+		chooseBoat = new ActionButton[16];
 		namePlayer = new JLabel[4];
-		isReady = new JButton[4];
+		isReady = new CaseACocher[4];
 		
-		rightPan = new JPanel();
-		leftPan = new JPanel();
+		rightPan = new PanneauColor(2);
+		leftPan = new PanneauColor(1);
+		
 		centerPan = new JPanel();
+		
 		
 		GridLayout gl = new GridLayout(4,2);
 		JPanel panPlayer = new JPanel();
 		panPlayer.setLayout(gl);
+		
 		int tmp;
 		for(int i = 0; i < 4; i++)
 		{
 			tmp = i+1;
-			namePlayer[i] = new JLabel("Joueur "+tmp);
-			isReady[i] = new JButton("x");
+			namePlayer[i] = new JLabel("");
+			namePlayer[i].setFont(new Font("Serif", Font.BOLD, 30));
+			
+			isReady[i] = new CaseACocher("");
+			namePlayer[i].setHorizontalAlignment(JLabel.CENTER);
+			isReady[i].setVisible(false);
 			panPlayer.add(namePlayer[i]);
 			panPlayer.add(isReady[i]);
 		}
@@ -78,26 +95,32 @@ public class SalonView extends JFrame implements ActionListener, Observable{
 		for(int i = 0; i < 16; i++)
 		{
 			tmp = i+1;
-			chooseBoat[i] = new JButton(tmp+"");
+			chooseBoat[i] = new ActionButton(""+tmp);
 			chooseBoat[i].addActionListener(this);
 			rightPan.add(chooseBoat[i]);
 		}
 		
+		ActionButton.setChoose(false);
 		ready.addActionListener(this);
 		exit.addActionListener(this);
 		
 		gl = new GridLayout(3,1);
 		leftPan.setLayout(gl);
-		
-		leftPan.add(exit);
-		leftPan.add(panPlayer);
 		leftPan.add(ready);
+		leftPan.add(panPlayer);
+		exit.setPreferredSize(new Dimension(sizeWidth/2,sizeHeight/15));
+		JPanel panTmp =  new JPanel(new BorderLayout());
+		panTmp.add(exit, BorderLayout.SOUTH);
+		leftPan.add(panTmp);
 		
 		gl = new GridLayout(1,2);
 		centerPan.setLayout(gl);
 		
 		centerPan.add(leftPan);
 		centerPan.add(rightPan);
+		panPlayer.setOpaque(false);
+		centerPan.setOpaque(false);
+		panTmp.setOpaque(false);
 		
 		this.setContentPane(centerPan);
 		this.setLocationRelativeTo(null);
@@ -112,7 +135,9 @@ public class SalonView extends JFrame implements ActionListener, Observable{
 		}
 		else if(event.getSource() == ready)
 		{
+			ActionButton.setChoose(true);
 			player.setReady(true);
+			System.out.print("Position choisi : "+player.getPosBateau());
 			this.updateObservateur("choosePosition");
 			//new GameView();
 			//this.dispose();
@@ -122,8 +147,14 @@ public class SalonView extends JFrame implements ActionListener, Observable{
 			for(int i = 0; i < 16; i++){
 				if(event.getSource() == chooseBoat[i])
 				{
-					int number =Integer.parseInt(chooseBoat[i].getText());
-					player.setPosBateau(number);
+					for(int j = 0; j < 16 ; j++)
+					{
+						if(!chooseBoat[j].isCloudB())
+							chooseBoat[j].changeCloud();
+					}
+					
+					chooseBoat[i].changeBoat();
+					player.setPosBateau(chooseBoat[i].getPosition());
 				}
 			}
 		
@@ -133,11 +164,12 @@ public class SalonView extends JFrame implements ActionListener, Observable{
 	public void setPlayerName(int position, String name)
 	{
 		namePlayer[position].setText(name);
+		isReady[position].setVisible(true);
 	}
 	
 	public void setStatut(int position, Boolean status)
 	{
-		isReady[position].setText(status.toString());
+		isReady[position].changPret();
 	}
 
 	@Override
