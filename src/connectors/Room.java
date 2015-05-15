@@ -65,7 +65,6 @@ public class Room{
 					j = lPlayerLife.size(); // sortie de boucle.
 				}
 			}
-			
 			return lPlayerLife.get(posJ).getId();
 		}
 		
