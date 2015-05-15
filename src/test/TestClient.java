@@ -11,6 +11,7 @@ public class TestClient {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Client c1 = new Client("localhost",1234);
+		c1.ListRoom();
 		Player p1 = c1.ConnexionRoom("Toto", 1);
 		
 		System.out.println("L'id du client est: "+p1.getId());
