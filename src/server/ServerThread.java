@@ -16,6 +16,7 @@ public class ServerThread implements Runnable {
 
 	private ArrayList<Socket> lsock;
 	private Room room;
+	private boolean execute = true;
 
 	public ServerThread(Room room) {
 		lsock = new ArrayList<Socket>();
@@ -27,9 +28,11 @@ public class ServerThread implements Runnable {
 		lsock.add(socket);
 	}
 
+	public boolean isExecute(){return execute;}
+	
+	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		boolean execute = true;
 		while(execute)
 		{
 			try{
@@ -38,20 +41,16 @@ public class ServerThread implements Runnable {
 				{
 					// On démarre la partie. 		
 					// Lecture de la méthode demandée par le client:
-					System.out.print("\nici serv 1");
 					InputStreamReader isr = new InputStreamReader(lsock.get(s).getInputStream());
 					BufferedReader in = new BufferedReader(isr);
 					
-					System.out.print("ici serv 2");
 					JSONObject json = new JSONObject(in.readLine());
 					String msg_client = (String) json.get("Methode");
-					System.out.print("ici serv3");
+					
 					// Exécution de la méthode demandée	
 					PrintWriter out = new PrintWriter(lsock.get(s).getOutputStream(),true);
 					int idPlayer;
 					JSONObject dataset = new JSONObject(); 
-					
-					System.out.print("\n"+msg_client);
 					switch(msg_client)
 					{
 						case "InfoRoom":		
@@ -94,22 +93,18 @@ public class ServerThread implements Runnable {
 					
 						case "Shoot":
 							// Lecture de l'idPlayer et de la posTir. 
-							System.out.print("\navant serv shoot");
 							idPlayer = Integer.parseInt(json.getString("IdPlayer"));
-							System.out.print("\nentredeux");
 							int posTir = Integer.parseInt(json.getString("posTir"));
-							System.out.print("\nici serv shoot");
-							//room.CheckShoot(idPlayer,posTir);
+							
+							room.CheckShoot(idPlayer,posTir);
 							
 							// Préparation de la réponse: 
 							// Liste des id des joueurs touchés
 							try {
 								ArrayList<Integer> lShoot = room.CheckShoot(idPlayer, posTir);
-								System.out.print("\nafter checkout");
 								dataset.put("NbPlayerDead",lShoot.size());
 								for(int i=0;i<lShoot.size();i++){
 									dataset.put("PlayerDead"+i, lShoot.get(i));
-									System.out.print("PlayerDead-"+i+" :"+lShoot.get(i));
 								}	
 							} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 							
@@ -126,61 +121,15 @@ public class ServerThread implements Runnable {
 							System.out.println("Fermeture du serveur pour le port:"+lsock.get(s).getLocalPort());
 							out.println("Tchao");
 							out.close();
-							lsock.get(s).close();		
+							lsock.get(s).close();	
+							
 							execute = false;
 							break;
 					}
 				}
-
-				/*// Lecture de la méthode demandée par le client:
-				InputStreamReader isr = new InputStreamReader(lsock.get(jeton).getInputStream());
-				BufferedReader in = new BufferedReader(isr);
-				
-				JSONObject json = new JSONObject(in.readLine());
-				String msg_client = (String) json.get("Methode");
-				
-				// Exécution de la méthode demandée	
-				PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
-				int idPlayer;
-				JSONArray ljson = new JSONArray();
-				switch(msg_client)
-				{
-					case "SelectPosition":
-						// Lecture de l'idPlayer et de la posBateau. 
-						idPlayer = Integer.parseInt(json.getString("IdPlayer"));
-						int posBateau = Integer.parseInt(json.getString("posBateau"));
-						room.getPlayer(idPlayer).setPosBateau(posBateau);
-						out.println("OK");
-					break;
-				
-					case "Shoot":
-						// Lecture de l'idPlayer et de la posTir. 
-						idPlayer = Integer.parseInt(json.getString("IdPlayer"));
-						int posTir = Integer.parseInt(json.getString("posTir"));
-						
-						room.CheckShoot(idPlayer,posTir);
-						
-						// Préparation de la réponse: 
-						try {
-							JSONObject dataset = new JSONObject();
-							dataset.put("Code", 1);
-							ljson.put(dataset);
-						} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
-						
-						System.out.println(ljson);
-						out.println(ljson);
-					break;
-					
-					default:
-						System.out.println("Fermeture du serveur pour le port:"+sock.getLocalPort());
-						out.println("Tchao");
-						out.close();
-						sock.close();		
-						execute = false;
-						break;
-				}*/
 			}
 			catch(Exception e){}	
 		}
+	
 	}
 }

@@ -8,5 +8,4 @@ public class MainServer {
 		// TODO Auto-generated method stub
 		new Server(1234);
 	}
-
 }
