@@ -48,6 +48,27 @@ public class Room{
 				return false;
 		}
 		
+		public int NextPlayer(int idPlayer)  // Renvoi l'id du prochain joueur en vie dans la liste.
+		{
+			int retour = 0;
+			ArrayList<Player> lPlayerLife = new ArrayList<Player>(); // Création d'un tablau répertoriant les joueurs en vie.
+			for(int i=0; i<lPlayer.size();i++)
+			{
+				if(lPlayer.get(i).isLife())
+					lPlayerLife.add(lPlayer.get(i));
+			}
+			
+			int posJ = 0;
+			for(int j=0;j<lPlayerLife.size();j++){
+				if(lPlayerLife.get(j).getId() == idPlayer){
+					posJ = j++;
+					j = lPlayerLife.size(); // sortie de boucle.
+				}
+			}
+			
+			return lPlayerLife.get(posJ).getId();
+		}
+		
 		public void setRoomFull(boolean roomFull) {this.roomFull = roomFull;}		
 		public int getIdRoom() {return idRoom;}
 		public int getNbPlayerMax(){return nbPlayerMax;}

@@ -29,7 +29,7 @@ public class ServerThread implements Runnable {
 	}
 
 	public boolean isExecute(){return execute;}
-	
+	public Room getRoom(){return room;}
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -82,12 +82,9 @@ public class ServerThread implements Runnable {
 							int posBateau = Integer.parseInt(json.getString("posBateau"));
 							room.getPlayerById(idPlayer).setPosBateau(posBateau);
 							room.getPlayerById(idPlayer).setReady(true);
-							// Changement du jeton. 
-							if(idPlayer != room.getPlayer(room.getNbPlayerMax()-1).getId())
-								room.setJeton(idPlayer+1); 
-							else // Sinon, tout le monde a sélect sa pos, on redonne le jeton au premier. 
-								room.setJeton(room.getPlayer(0).getId());
 							
+							// Changement du jeton. 
+							room.setJeton(room.NextPlayer(idPlayer));
 							out.println("OK");
 						break;
 					
@@ -109,28 +106,33 @@ public class ServerThread implements Runnable {
 							//System.out.println(dataset);
 							out.println(dataset);
 							
-							if(idPlayer != room.getNbPlayerMax()-1)
-								room.setJeton(idPlayer+1);
-							else
-								room.setJeton(room.getPlayer(0).getId());
+							// Changement du jeton
+							room.setJeton(room.NextPlayer(idPlayer));							
 						break;
 						
 						case "Exit":
 							idPlayer = Integer.parseInt(json.getString("idPlayer"));
-							System.out.println("Fermeture du serveur pour le port:"+lsock.get(s).getLocalPort());
+							System.out.println("Fermeture du serveur pour le port:"+lsock.get(s).getPort());
 							out.println("Tchao");
-							out.close();
+							
 							lsock.get(s).close();	
 							
-							room.getPlayer(idPlayer).Kill();
+							room.getPlayerById(idPlayer).Kill();
+							
+							if(room.getJeton() == idPlayer)
+							{
+								room.setJeton(room.NextPlayer(idPlayer));
+							}
 							
 							boolean SockLife = false;
 							for(int i=0;i<lsock.size();i++){
 								if(lsock.get(i).isClosed()==false)
 									SockLife = true;
 							}
-							if(SockLife)
+							if(!SockLife){
 								execute = false;
+								out.close();
+							}
 							break;
 					}
 				}
