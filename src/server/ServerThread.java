@@ -45,7 +45,7 @@ public class ServerThread implements Runnable {
 					BufferedReader in = new BufferedReader(isr);
 					
 					JSONObject json = new JSONObject(in.readLine());
-					String msg_client = (String) json.get("Methode");
+					String msg_client = (String) json.get("methode");
 					
 					// Exécution de la méthode demandée	
 					PrintWriter out = new PrintWriter(lsock.get(s).getOutputStream(),true);
@@ -53,21 +53,18 @@ public class ServerThread implements Runnable {
 					JSONObject dataset = new JSONObject(); 
 					switch(msg_client)
 					{
-						case "InfoRoom":		
-							if(room.getNbPlayer() == room.getNbPlayerMax()){
-								// est-ce que tous le joueurs sont prêt ? 
-								if(!room.isStart())
-									room.setJeton(room.getPlayer(0).getId()); // On donne le premier jeton ! 
-							}
+						case "infoRoom":		
 							// Reponse
 							dataset.put("idRoom",room.getIdRoom());
+							dataset.put("nameRoom",room.getName());
+							dataset.put("creatorRoom", room.getCreator());
 							dataset.put("nbPlayerLife",room.getNbPlayerLife());
 							dataset.put("nbPlayerMax",room.getNbPlayerMax());
 							dataset.put("nbPlayer",room.getNbPlayer());
 							for(int i=0;i<room.getNbPlayer();i++)
 							{
 								dataset.put("idPlayer"+i,room.getPlayer(i).getId());
-								dataset.put("nomPlayer"+i,room.getPlayer(i).getNom());
+								dataset.put("namePlayer"+i,room.getPlayer(i).getNom());
 								dataset.put("lifePlayer"+i,room.getPlayer(i).isLife());
 								dataset.put("readyPlayer"+i,room.getPlayer(i).isReady());
 							}	
@@ -76,7 +73,7 @@ public class ServerThread implements Runnable {
 							out.println(dataset);
 						break;
 					
-						case "SelectPosition":
+						case "selectPosition":
 							// Lecture de l'idPlayer et de la posBateau. 
 							idPlayer = Integer.parseInt(json.getString("idPlayer"));
 							int posBateau = Integer.parseInt(json.getString("posBateau"));
@@ -84,39 +81,48 @@ public class ServerThread implements Runnable {
 							room.getPlayerById(idPlayer).setReady(true);
 							
 							lastAction = room.getPlayerById(idPlayer).getNom() + " a positionné son bateau !";
+							
 							// Changement du jeton. 
-							room.setJeton(room.NextPlayer(idPlayer));
+							if(room.getNbPlayer() == room.getNbPlayerMax()){
+								// est-ce que tous le joueurs sont prêt ? 
+								if(room.isStart())
+									room.setJeton(room.getPlayer(0).getId()); // On donne le premier jeton ! 
+							}		
 							out.println("OK");
 						break;
 					
-						case "Shoot":
+						case "shoot":
 							// Lecture de l'idPlayer et de la posTir. 
 							idPlayer = Integer.parseInt(json.getString("idPlayer"));
 							int posTir = Integer.parseInt(json.getString("posTir"));
 							
-							// Préparation de la réponse: 
-							// Liste des id des joueurs touchés
-							ArrayList<Integer> lShoot = room.CheckShoot(idPlayer, posTir);
-							lastAction = room.getPlayerById(idPlayer).getNom()+" a tiré en position "+posTir+" et a touché ";
-							try {
-								dataset.put("NbPlayerDead",lShoot.size());
-								for(int i=0;i<lShoot.size();i++){
-									dataset.put("PlayerDead"+i, lShoot.get(i));
-									lastAction += room.getPlayerById(lShoot.get(i)).getNom()+" ";
-								}	
-							} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
-							
-							if(lShoot.size()<1)
-								lastAction += "personne !";
-							//System.out.println(dataset);
-							out.println(dataset);
-							
-							// Changement du jeton
-							room.setJeton(room.NextPlayer(idPlayer));		
-							System.out.println(room.getJeton());
+							if(room.getJeton() == idPlayer)  // On vérifie que c'est bien le joueur qui a le droit de parler.
+							{
+								// Préparation de la réponse: 
+								// Liste des id des joueurs touchés
+								ArrayList<Integer> lShoot = room.CheckShoot(idPlayer, posTir);
+								lastAction = room.getPlayerById(idPlayer).getNom()+" a tiré en position "+posTir+" et a touché ";
+								try {
+									dataset.put("nbPlayerDead",lShoot.size());
+									for(int i=0;i<lShoot.size();i++){
+										dataset.put("playerDead"+i, lShoot.get(i));
+										lastAction += room.getPlayerById(lShoot.get(i)).getNom()+" ";
+									}	
+								} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+								
+								if(lShoot.size()<1)
+									lastAction += "personne !";
+								//System.out.println(dataset);
+								out.println(dataset);
+								
+								// Changement du jeton
+								room.setJeton(room.NextPlayer(idPlayer));		
+							}
+							else
+								System.out.println("ERREUR: Ce n'est pas toi qui a le JETON !");
 						break;
 						
-						case "Exit":
+						case "exit":
 							idPlayer = Integer.parseInt(json.getString("idPlayer"));
 							System.out.println("Fermeture du serveur pour le port:"+lsock.get(s).getPort());
 							out.println("Tchao");
@@ -142,8 +148,8 @@ public class ServerThread implements Runnable {
 							}
 							break;
 							
-						case "LastAction":
-							dataset.put("LastAction",lastAction);
+						case "lastAction":
+							dataset.put("lastAction",lastAction);
 							out.println(dataset);
 							break;
 					}

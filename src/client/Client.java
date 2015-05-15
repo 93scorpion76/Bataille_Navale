@@ -22,22 +22,78 @@ public class Client{
 	private BufferedReader in;
 	private Player player;
 	
-	public Client(String ip, int port, String nomJoueur){
+	public Client(String ip, int port){
 		try {
 			sock = new Socket(ip,port);
 			isr = new InputStreamReader(sock.getInputStream());
 			in = new BufferedReader(isr);
 			in.ready();
-			JSONObject dataset = new JSONObject();
-			dataset.put("Nom", nomJoueur);
 			System.out.println("Ouverture client");
-			// Afficher msg server et récup idJoueur
+		} catch (IOException e) {System.out.println("Erreur Client:"+e.getMessage());}
+	}
+	
+	public Player ConnexionRoom(String namePlayer, int idRoom)
+	{
+		player = null;
+		try{
+			JSONObject dataset = new JSONObject();
+			dataset.put("methode","joinRoom");
+			dataset.put("nomClient", namePlayer);
+			dataset.put("idRoom",idRoom);
+			// Afficher msg retour et récup idJoueur
 			JSONObject json = new JSONObject(EnvoiRequete(dataset));
-			String msg_welcome = (String) json.get("Message_Welcome");
-			System.out.println("Réponse serveur:"+msg_welcome);
-			int idJoueur = (int) json.get("IdPlayer");
-			player = new Player(idJoueur,nomJoueur);
-			} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
+			String msgBack = (String) json.get("messageBack");
+			System.out.println("Connexion ROOM n°"+idRoom+" - Réponse serveur: "+msgBack);
+			int idPlayer = (int) json.get("idPlayer");
+			player = new Player(idPlayer,namePlayer);
+		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
+		
+		return player;
+	}
+	
+	
+	public Player CreateRoom(String namePlayer, String nameRoom, int NbPlayerRoom)
+	{
+		player = null; 
+		try{
+			JSONObject dataset = new JSONObject();
+			dataset.put("methode","createRoom");
+			dataset.put("nameRoom",nameRoom);
+			dataset.put("nameCreator", namePlayer);	
+			dataset.put("nbPlayer",NbPlayerRoom);
+			
+			// Afficher msg retour et récup idJoueur
+			JSONObject json = new JSONObject(EnvoiRequete(dataset));
+			String msgBack = (String) json.get("messageBack");
+			System.out.println("Creation ROOM "+nameRoom+" - Réponse serveur: "+msgBack);
+			int idPlayer = (int) json.get("idPlayer");
+			player = new Player(idPlayer,namePlayer);
+		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
+		
+		return player;
+	}
+	
+	public ArrayList<Room> ListRoom()
+	{
+		ArrayList<Room> lRoom = new ArrayList<Room>();
+		try{
+			JSONObject dataset = new JSONObject();
+			dataset.put("methode","listRoom");
+			
+			// Afficher retour 
+			JSONObject json = new JSONObject(EnvoiRequete(dataset));
+			int nbRoom = json.getInt("nbRoom");
+			for(int i=0;i<nbRoom;i++)
+			{
+				int idRoom = json.getInt("idRoom"+i);
+				String nameRoom = json.getString("nameRoom"+i);
+				String creator = json.getString("creator"+i);
+				int nbPlayerMax = json.getInt("nbPlayerMax"+i);
+				lRoom.add(new Room(idRoom, nameRoom, creator, nbPlayerMax));
+			}
+		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
+		
+		return lRoom;
 	}
 	
 	public Player getPlayer(){return player;}
@@ -46,22 +102,24 @@ public class Client{
 		Room room = null;
 		JSONObject dataset = new JSONObject();
 		try {
-			dataset.put("Methode", "InfoRoom");
+			dataset.put("methode", "infoRoom");
 			String result = EnvoiRequete(dataset);
 			JSONObject json = new JSONObject(result);
 			int idRoom = json.getInt("idRoom");
+			String nameRoom = json.getString("nameRoom");
+			String creatorRoom = json.getString("creatorRoom");
 			int nbPlayerLife = json.getInt("nbPlayerLife");
 			int nbPlayerMax = json.getInt("nbPlayerMax");
 			int nbPlayer = json.getInt("nbPlayer");
 			ArrayList<Player> lPlayer = new ArrayList<Player>();
 			for(int i=0;i<nbPlayer;i++)
 			{
-				lPlayer.add(new Player(json.getInt("idPlayer"+i),json.getString("nomPlayer"+i),json.getBoolean("lifePlayer"+i),json.getBoolean("readyPlayer"+i)));
+				lPlayer.add(new Player(json.getInt("idPlayer"+i),json.getString("namePlayer"+i),json.getBoolean("lifePlayer"+i),json.getBoolean("readyPlayer"+i)));
 			}
 			boolean roomFull = json.getBoolean("roomFull");
 			int jeton = json.getInt("jeton");
 			
-			room = new Room(idRoom, nbPlayerLife, nbPlayerMax, lPlayer, roomFull, jeton);
+			room = new Room(idRoom, nameRoom, creatorRoom, nbPlayerLife, nbPlayerMax, lPlayer, roomFull, jeton);
 			
 			//System.out.println("JSON client: "+dataset);
 			
@@ -78,7 +136,7 @@ public class Client{
 	{
 		JSONObject dataset = new JSONObject();
 		try {
-			dataset.put("Methode", "SelectPosition");
+			dataset.put("methode", "selectPosition");
 			dataset.put("idPlayer",player.getId());
 			dataset.put("posBateau", posBateau);
 			EnvoiRequete(dataset);
@@ -91,7 +149,7 @@ public class Client{
 		JSONObject dataset = new JSONObject();
 		ArrayList<Integer> retour = new ArrayList<Integer>();
 		try {
-			dataset.put("Methode", "Shoot");
+			dataset.put("methode", "shoot");
 			dataset.put("idPlayer",player.getId());
 			dataset.put("posTir", posTir);
 			
@@ -99,10 +157,10 @@ public class Client{
 			
 			String result = EnvoiRequete(dataset);
 			JSONObject json = new JSONObject(result);
-			int nbPlayerDead = json.getInt("NbPlayerDead");
+			int nbPlayerDead = json.getInt("nbPlayerDead");
 			for(int i=0;i<nbPlayerDead;i++)
 			{
-				retour.add(json.getInt("PlayerDead"+i));
+				retour.add(json.getInt("playerDead"+i));
 			}
 			
 			
@@ -115,7 +173,7 @@ public class Client{
 		try {
 			JSONObject dataset = new JSONObject();
 			try {
-				dataset.put("Methode", "Exit");
+				dataset.put("methode", "exit");
 				dataset.put("idPlayer",player.getId());
 			} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 			System.out.println("JSON client: "+dataset);	
@@ -131,10 +189,10 @@ public class Client{
 		JSONObject dataset = new JSONObject();
 		String retour = "";
 		try {
-			dataset.put("Methode", "LastAction");
+			dataset.put("methode", "lastAction");
 			String result = EnvoiRequete(dataset);
 			JSONObject json = new JSONObject(result);
-			retour = json.getString("LastAction");
+			retour = json.getString("lastAction");
 		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 		return retour;
 	}
