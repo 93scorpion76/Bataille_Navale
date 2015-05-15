@@ -126,6 +126,18 @@ public class Client{
 		} catch (IOException e) {System.out.println("Erreur fermeture client : "+e.getMessage());}
 	}
 	
+	public String LastAction()
+	{
+		JSONObject dataset = new JSONObject();
+		String retour = "";
+		try {
+			dataset.put("Methode", "LastAction");
+			String result = EnvoiRequete(dataset);
+			JSONObject json = new JSONObject(result);
+			retour = json.getString("LastAction");
+		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+		return retour;
+	}
 	
 	private String EnvoiRequete(JSONObject dataset)
 	{

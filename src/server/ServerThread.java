@@ -16,6 +16,7 @@ public class ServerThread implements Runnable {
 
 	private ArrayList<Socket> lsock;
 	private Room room;
+	private String lastAction = "";
 	private boolean execute = true;
 
 	public ServerThread(Room room) {
@@ -82,6 +83,7 @@ public class ServerThread implements Runnable {
 							room.getPlayerById(idPlayer).setPosBateau(posBateau);
 							room.getPlayerById(idPlayer).setReady(true);
 							
+							lastAction = room.getPlayerById(idPlayer).getNom() + " a positionné son bateau !";
 							// Changement du jeton. 
 							room.setJeton(room.NextPlayer(idPlayer));
 							out.println("OK");
@@ -94,14 +96,18 @@ public class ServerThread implements Runnable {
 							
 							// Préparation de la réponse: 
 							// Liste des id des joueurs touchés
+							ArrayList<Integer> lShoot = room.CheckShoot(idPlayer, posTir);
+							lastAction = room.getPlayerById(idPlayer).getNom()+" a tiré en position "+posTir+" et a touché ";
 							try {
-								ArrayList<Integer> lShoot = room.CheckShoot(idPlayer, posTir);
 								dataset.put("NbPlayerDead",lShoot.size());
 								for(int i=0;i<lShoot.size();i++){
 									dataset.put("PlayerDead"+i, lShoot.get(i));
+									lastAction += room.getPlayerById(lShoot.get(i)).getNom()+" ";
 								}	
 							} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
 							
+							if(lShoot.size()<1)
+								lastAction += "personne !";
 							//System.out.println(dataset);
 							out.println(dataset);
 							
@@ -118,6 +124,7 @@ public class ServerThread implements Runnable {
 							lsock.get(s).close();	
 							
 							room.getPlayerById(idPlayer).Kill();
+							lastAction = room.getPlayerById(idPlayer).getNom()+" est mort en quittant la partie.";
 							
 							if(room.getJeton() == idPlayer)
 							{
@@ -133,6 +140,11 @@ public class ServerThread implements Runnable {
 								execute = false;
 								out.close();
 							}
+							break;
+							
+						case "LastAction":
+							dataset.put("LastAction",lastAction);
+							out.println(dataset);
 							break;
 					}
 				}
