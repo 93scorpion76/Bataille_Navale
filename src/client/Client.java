@@ -17,36 +17,23 @@ import connectors.Room;
 
 public class Client{
 
-	private String ip; 
-	private int port;
 	private Socket sock; 
 	private InputStreamReader isr; 
 	private BufferedReader in;
 	private Player player;
 	
 	public Client(String ip, int port){
-		this.ip = ip; 
-		this.port = port;
-	}
-	
-	public void InitConnexionServer()
-	{
 		try {
-			if(sock != null)
-			{
-				sock.close();
-				in.close();	
-			}	
 			sock = new Socket(ip,port);
 			isr = new InputStreamReader(sock.getInputStream());
 			in = new BufferedReader(isr);
 			in.ready();
+			System.out.println("Ouverture client");
 		} catch (IOException e) {System.out.println("Erreur Client:"+e.getMessage());}
 	}
 	
 	public Player ConnexionRoom(String namePlayer, int idRoom)
 	{
-		InitConnexionServer();
 		player = null;
 		try{
 			JSONObject dataset = new JSONObject();
@@ -67,7 +54,6 @@ public class Client{
 	
 	public Player CreateRoom(String namePlayer, String nameRoom, int NbPlayerRoom)
 	{
-		InitConnexionServer();
 		player = null; 
 		try{
 			JSONObject dataset = new JSONObject();
@@ -89,7 +75,6 @@ public class Client{
 	
 	public ArrayList<Room> ListRoom()
 	{
-		InitConnexionServer();
 		ArrayList<Room> lRoom = new ArrayList<Room>();
 		try{
 			JSONObject dataset = new JSONObject();

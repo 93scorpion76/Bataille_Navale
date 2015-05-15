@@ -118,7 +118,8 @@ public class Server {
 						srvTh.AddSocket(sock);
 						new Thread(srvTh).start();
 						break;
-										
+						
+						
 					case "listRoom": // Liste les rooms où il y a encore de la place.
 						dataset.put("nbRoom",lThread.size());
 						for(int i=0;i<lThread.size();i++)
