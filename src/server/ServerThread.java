@@ -93,10 +93,8 @@ public class ServerThread implements Runnable {
 					
 						case "Shoot":
 							// Lecture de l'idPlayer et de la posTir. 
-							idPlayer = Integer.parseInt(json.getString("IdPlayer"));
+							idPlayer = Integer.parseInt(json.getString("idPlayer"));
 							int posTir = Integer.parseInt(json.getString("posTir"));
-							
-							room.CheckShoot(idPlayer,posTir);
 							
 							// Préparation de la réponse: 
 							// Liste des id des joueurs touchés

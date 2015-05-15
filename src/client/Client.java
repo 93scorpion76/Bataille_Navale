@@ -133,14 +133,11 @@ public class Client{
 	private String EnvoiRequete(JSONObject dataset)
 	{
 		try {
-			System.out.print("\n envoi au serveur 1 ");
 			PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
 			out.println(dataset); // Envoi au srv du fichier json
-			System.out.print("\n envoi au serveur 2 ");
 			
 			// Réception de la réponse du serveur
 			String rep_srv = in.readLine(); 
-			System.out.println("\n Réponse serveur:"+rep_srv);
 			
 			return rep_srv;
 		} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}
