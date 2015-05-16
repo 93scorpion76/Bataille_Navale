@@ -127,7 +127,7 @@ public class Server {
 							if(!lThread.get(i).getRoom().isFull())
 							{
 								dataset.put("idRoom"+i,lThread.get(i).getRoom().getIdRoom());
-								dataset.put("nameRoom"+i,lThread.get(i).getClass().getName());
+								dataset.put("nameRoom"+i,lThread.get(i).getRoom().getName());
 								dataset.put("creator"+i,lThread.get(i).getRoom().getCreator());
 								dataset.put("nbPlayerMax"+i,lThread.get(i).getRoom().getNbPlayerMax());
 							}	

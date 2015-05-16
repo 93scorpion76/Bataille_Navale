@@ -4,15 +4,15 @@ import observer.Observable;
 import observer.Observateur;
 import client.Client;
 import connectors.Room;
-import view.SalonView;
+import view.RoomView;
 
 public class ThreadClient implements Runnable, Observateur{
 
-	private SalonView salon;
+	private RoomView salon;
 	private Client cli;
 	private ConnexionControl connexionControl;
 	
-	public ThreadClient(SalonView salon, Client cli, ConnexionControl connexionControl)
+	public ThreadClient(RoomView salon, Client cli, ConnexionControl connexionControl)
 	{
 		this.salon = salon;
 		this.cli = cli;

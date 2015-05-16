@@ -1,31 +1,31 @@
 package controlers;
 
 import view.GameView;
-import view.SalonView;
+import view.RoomView;
 import connectors.Player;
 import connectors.Room;
 import client.Client;
 
 public class ConnexionControl {
 	
-	SalonView salon;
+	RoomView roomView;
 	Client cli = null;
 	
 	//Etablit une connexion au serveur
-	public ConnexionControl(String namePlayer)
+	public ConnexionControl(Player player, Client cli)
 	{
 		//cli = new Client("localhost",1234, namePlayer);
+		this.cli = cli;
+		Player myPlayer = player;
+		roomView = new RoomView(myPlayer);
 		
-		Player myPlayer = cli.getPlayer();
-		salon = new SalonView(myPlayer);
-		
-		ThreadClient tc = new ThreadClient(salon, cli, this);
+		ThreadClient tc = new ThreadClient(roomView, cli, this);
 		new Thread(tc).start();
 	}
 	
 	public void changeView()
 	{
-		salon.dispose();
+		roomView.dispose();
 		new GameControl(cli);
 	}
 

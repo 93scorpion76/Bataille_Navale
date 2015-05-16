@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import observer.Observable;
 import observer.Observateur;
-import view.SalonView;
+import view.RoomView;
 
 public class Room{
 		private int idRoom;
@@ -80,6 +80,7 @@ public class Room{
 		public void setRoomFull(boolean roomFull) {this.roomFull = roomFull;}		
 		public int getIdRoom() {return idRoom;}
 		public String getName(){return name;}
+		
 		public String getCreator(){return creator;}
 		public int getNbPlayerMax(){return nbPlayerMax;}
 		public int getNbPlayerLife(){return nbPlayerLife;}

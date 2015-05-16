@@ -27,6 +27,7 @@ public class Client{
 	public Client(String ip, int port){
 		this.ip = ip; 
 		this.port = port;
+		player = null;
 	}
 	
 	public void InitConnexionServer()

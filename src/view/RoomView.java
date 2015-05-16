@@ -24,7 +24,7 @@ import observer.Observateur;
 import connectors.Player;
 import controlers.ThreadClient;
 
-public class SalonView extends JFrame implements ActionListener, Observable{
+public class RoomView extends JFrame implements ActionListener, Observable{
 	
 	private PanneauColor rightPan;
 	private PanneauColor leftPan;
@@ -46,7 +46,7 @@ public class SalonView extends JFrame implements ActionListener, Observable{
 	//Création collection d'observateur
 	private ArrayList<Observateur> listObservateur = new ArrayList<Observateur>();
 	
-	public SalonView(Player player)
+	public RoomView(Player player)
 	{
 		this.player = player;
 		
