@@ -78,6 +78,10 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		text.setEditable(false);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
+
+		text.setOpaque(false);
+		scrollPane.setOpaque(false);
+		
 		exit = new SmallButton("Quitter");
 		exit.setPreferredSize(new Dimension(sizeWidth/2,sizeHeight/15));
 		JPanel panTmp =  new JPanel(new BorderLayout());
@@ -115,7 +119,6 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
-		text.setOpaque(false);
 	}
 	
 	public JLabel getTourLab() {

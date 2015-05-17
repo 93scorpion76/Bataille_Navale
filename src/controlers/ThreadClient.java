@@ -49,7 +49,6 @@ public class ThreadClient implements Runnable, Observateur{
 				
 					try {
 						Thread.sleep(33);
-						isUpdate = false;
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

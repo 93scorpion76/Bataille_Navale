@@ -41,7 +41,7 @@ public class ListRoomView extends JFrame implements ActionListener, Observable, 
 	
 	public ListRoomView(String namePlayer)
 	{
-		this.setTitle("Bataille Navale : ");
+		this.setTitle("Bataille Navale");
 		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -63,7 +63,7 @@ public class ListRoomView extends JFrame implements ActionListener, Observable, 
 		createRoom = new SmallButton("Créer une bataille navale");
 		createRoom.addActionListener(this);
 		
-		welcomeLab = new JLabel("Bienvenu Pirate :"+namePlayer);
+		welcomeLab = new JLabel("Bienvenu Pirate : "+namePlayer);
 		welcomeLab.setHorizontalAlignment(JLabel.CENTER);
 		welcomeLab.setFont(new Font("Serif", Font.BOLD, 30));
 		

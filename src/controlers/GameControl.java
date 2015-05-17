@@ -1,5 +1,6 @@
 package controlers;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import connectors.Player;
@@ -16,6 +17,8 @@ public class GameControl implements Runnable, Observateur{
 	private Room room;
 	
 	private String message;
+	private boolean isUpdate = false;
+	
 	public GameControl(Client cli)
 	{
 		this.message = "";
@@ -31,6 +34,7 @@ public class GameControl implements Runnable, Observateur{
 	@Override
 	public void update(String string, String appel) {
 		// TODO Auto-generated method stub
+		isUpdate = true;
 		if(string.equals("shoot"))
 		{
 			message = appel;
@@ -44,6 +48,8 @@ public class GameControl implements Runnable, Observateur{
 			{
 				this.game.getActionButton(Integer.parseInt(appel)).changeDebris();
 			}
+			
+			isUpdate = false;
 		}
 		else if(string.equals("exit"))
 		{
@@ -64,26 +70,26 @@ public class GameControl implements Runnable, Observateur{
 		int jeton = -1;
 		while(!room.isFinish())
 		{
+			if(!isUpdate){
+				this.room = cli.InfoRoom();
 			
-			this.room = cli.InfoRoom();
-			
-			if(room.getJeton() != jeton)
-			{
-				if(!cli.LastAction().equals(""))
-					this.game.addMessage("\n"+cli.LastAction());
-
-				this.game.getTourLab().setText("C'est le tour du joueur "+room.getPlayerById(room.getJeton()).getNom());
-				
-				
-				jeton = room.getJeton();
-				this.game.enabledAllButton();
-				for(int i = 0; i < room.getNbPlayer(); i++)
+				if(room.getJeton() != jeton)
 				{
-					if(room.getJeton() == room.getPlayer(i).getId())
+					if(!cli.LastAction().equals(""))
+						this.game.addMessage("\n"+cli.LastAction());
+					
+					this.game.getTourLab().setText("C'est le tour du joueur "+room.getPlayerById(room.getJeton()).getNom());	
+				
+					jeton = room.getJeton();
+					this.game.enabledAllButton();
+					for(int i = 0; i < room.getNbPlayer(); i++)
 					{
-						i = room.getNbPlayer();
-						if(!this.game.getButtonEnabled())
-							this.game.enabledAllButtonIDPlayer(room.getJeton());
+						if(room.getJeton() == room.getPlayer(i).getId())
+						{
+							i = room.getNbPlayer();
+							if(!this.game.getButtonEnabled())
+								this.game.enabledAllButtonIDPlayer(room.getJeton());
+						}
 					}
 				}
 			}
@@ -103,7 +109,54 @@ public class GameControl implements Runnable, Observateur{
 		if(room.isFinish())
 		{
 			this.game.enabledAllButton();
-			this.game.addMessage("Game Finish");
+			
+			String nameWinner ="";
+			for(int i = 0; i < room.getNbPlayer(); i++)
+			{
+				if(room.getPlayer(i).isLife())
+					nameWinner = room.getPlayer(i).getNom();
+			}
+			
+			this.game.addMessage("\nLe joueur "+nameWinner+" a gagné !");
+			this.game.addMessage("\nRetour a la liste des batailles dans 5 secondes.");
+			
+			float date = 0;
+			boolean affiche = true;
+			String var = "";
+			int tmpSec;
+			
+			while(date <= 5.0)
+			{
+				date += 0.033;
+				
+				try 
+				{
+					Thread.sleep(33);
+				} 
+				catch (InterruptedException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+
+				tmpSec = (int) ((int)5 - date);
+				if(var.indexOf(tmpSec+"") == -1)
+				{
+					affiche = true;
+				}
+				
+				if(affiche){
+					var += tmpSec;
+					this.game.addMessage("\n"+tmpSec+" secondes restantes...");
+					affiche = false;
+				}
+				
+			}
+			
+			cli.Exit();
+			game.dispose();
+			new ListRoomControl(player.getNom());
 		}
 	
 	} 
