@@ -64,6 +64,7 @@ public class ActionButton  extends JButton implements MouseListener{
 	
 	public void changeCloud()
 	{
+		changeVisible();
 		if(!isChoose) {
 			chooseB= false;
 			cloudB = true;
@@ -81,6 +82,7 @@ public class ActionButton  extends JButton implements MouseListener{
 	
 	public void changeBoat()
 	{
+		changeVisible();
 		if(!isChoose) {
 			chooseB= true;
 			cloudB = false;
@@ -101,12 +103,18 @@ public class ActionButton  extends JButton implements MouseListener{
 		setVisible(false);
 	}
 	
+	public void changeVisible()
+	{
+		setVisible(true);
+	}
+	
 	public boolean isCloudB() {
 		return cloudB;
 	}
 
 	public void changeDebris()
 	{
+		changeVisible();
 		chooseB= false;
 		cloudB = false;
 		touchB = true;

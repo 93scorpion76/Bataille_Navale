@@ -68,10 +68,8 @@ public class GameControl implements Runnable, Observateur{
 		this.game.addObservateur(this);
 		
 		int jeton = -1;
-		int []boat = new int[3];
-		int []debris = new int[3];
-		int indexBoat = 0;
-		int indexDebris = 0;
+		int []boat = new int[room.getNbPlayer()];
+		int []debris = new int[room.getNbPlayer()];
 		
 		while(!room.isFinish())
 		{
@@ -93,32 +91,40 @@ public class GameControl implements Runnable, Observateur{
 					jeton = room.getJeton();
 					this.game.enabledAllButton();
 					
-					indexDebris = 0;
-					indexBoat = 0;
 					for(int i = 0; i <  room.getNbPlayer(); i++)
 					{
+						System.out.println("position du joueur "+room.getPlayer(i).getNom()+" en "+room.getPlayer(i).getPosBateau());
 						if(room.getPlayer(i).isLife()){
-							boat[indexBoat] = room.getPlayer(i).getPosBateau();
-							indexBoat++;	
+							boat[i] = room.getPlayer(i).getPosBateau();
+							debris[i] = 0;	
 						}		
 						else
 						{
-							debris[indexDebris] = room.getPlayer(i).getPosBateau();
-							indexDebris++;
+							debris[i] = room.getPlayer(i).getPosBateau();
+							boat[i] = 0;
 						}
 					}
 					
 					for(int i = 0; i < room.getNbPlayer(); i++)
 					{
-						if(room.getJeton() == room.getPlayer(i).getId())
+						System.out.println(i+" : bateau "+boat[i]);
+						System.out.println(i+" : debris "+debris[i]);
+					}
+					
+					if(!room.getPlayerById(player.getId()).isLife())
+					{
+						this.game.Observateur(player.getId(),boat, debris);
+					}
+					else
+					{
+						for(int i = 0; i < room.getNbPlayer(); i++)
 						{
-							i = room.getNbPlayer();
-							if(!this.game.getButtonEnabled())
-								this.game.enabledAllButtonIDPlayer(room.getJeton());
-						}
-						else if(!room.getPlayer(i).isLife())
-						{
-							this.game.Observateur(boat, debris);
+							if(room.getJeton() == room.getPlayer(i).getId())
+							{
+								i = room.getNbPlayer();
+								if(!this.game.getButtonEnabled())
+									this.game.enabledAllButtonIDPlayer(room.getJeton());
+							}
 						}
 					}
 				}

@@ -141,7 +141,7 @@ public class Client{
 			
 			room = new Room(idRoom, nameRoom, creatorRoom, nbPlayerMax, lPlayer, roomFull, jeton);
 			
-			//System.out.println("JSON client: "+dataset);
+			System.out.println("JSON client: "+dataset);
 			
 		} catch (JSONException e) {System.out.println("Erreur JSON client INFO ROOM:"+e.getMessage());}
 				

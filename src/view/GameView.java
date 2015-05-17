@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -35,7 +36,7 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	
 	private SmallButton exit;
 	private JTextArea text;
-	//private JScrollPane scroll = new JScrollPane(tableau);
+	private JScrollPane scrollPane;
 	
 	//Création collection d'observateur
 	private ArrayList<Observateur> listObservateur = new ArrayList<Observateur>();
@@ -116,7 +117,7 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		centerPan.add(rightPan);
 		
 		this.setContentPane(centerPan);
-		this.setLocationRelativeTo(null);
+		//this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
 	}
@@ -174,6 +175,10 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	public void addMessage(String message)
 	{
 		text.append(message);
+		/*JScrollBar sb = scrollPane.getVerticalScrollBar();
+		sb.setValue( sb.getMaximum() );*/
+		
+		//scrollPane.setV
 	}
 	
 	@Override
@@ -205,22 +210,27 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		return chooseCible[tmp];
 	}
 	
-	public void Observateur(int[] boat, int[]debris)
+	public void Observateur(int id, int[] boat, int[]debris)
 	{
-		for(int i = 0; i < 16; i++)
+		if(id == player.getId())
 		{
-			if(i+1 == boat[i])
-			{
-				chooseCible[i].changeBoat();
-			}
-			else if(i+1 == debris[i])
-			{
-				chooseCible[i].changeDebris();
-			}
-			else
+			for(int i = 0; i < 16; i++)
 			{
 				chooseCible[i].changeInvisible();
 			}
+			
+			for(int i = 0; i < boat.length; i++)
+			{
+				if(boat[i] != 0 ){
+					chooseCible[boat[i]-1].changeBoat();
+					chooseCible[boat[i]-1].changeVisible();
+				}
+				else if(debris[i] != 0 ){
+					chooseCible[debris[i]-1].changeDebris();
+					chooseCible[debris[i]-1].changeVisible();
+				}
+			}
+			
 		}
 	}
 }
