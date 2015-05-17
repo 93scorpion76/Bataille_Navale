@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -29,6 +30,8 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	private PanneauColor leftPan;
 	private PanneauColor rightPan;
 	private JPanel centerPan;
+	
+	private JLabel tourLab;
 	
 	private SmallButton exit;
 	private JTextArea text;
@@ -63,9 +66,11 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		text= new JTextArea(5,30);
 		chooseCible=new ActionButton[16];
 	
-		text.setFont(new Font("Serif", Font.BOLD, 20));
-		
+		text.setFont(new Font("Serif", Font.BOLD, 15));
+		tourLab = new JLabel("");
+		tourLab.setFont(new Font("Serif", Font.BOLD, 20));
 		//left 
+		
 		JScrollPane scrollPane = new JScrollPane(text);
 		scrollPane.setPreferredSize(new Dimension(380, 100));
 		text.setLineWrap(true);
@@ -79,6 +84,7 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		panTmp.add(exit, BorderLayout.SOUTH);
 		exit.addActionListener(this);
 		
+		leftPan.add(tourLab, BorderLayout.PAGE_START);
 		leftPan.add(scrollPane, BorderLayout.CENTER);
 		leftPan.add(exit, BorderLayout.PAGE_END);
 		
@@ -112,6 +118,10 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		text.setOpaque(false);
 	}
 	
+	public JLabel getTourLab() {
+		return this.tourLab;
+	}
+
 	public Player getPlayer() {
 		return player;
 	}
@@ -120,7 +130,7 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	{
 		for(int i = 0; i < 16; i++)
 		{
-			chooseCible[i].setEnabled(!chooseCible[i].isEnabled());
+			chooseCible[i].setEnabled(false);
 		}
 	}
 	
@@ -129,7 +139,7 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		if(id == player.getId()){
 			for(int i = 0; i < 16; i++)
 			{
-				chooseCible[i].setEnabled(!chooseCible[i].isEnabled());
+				chooseCible[i].setEnabled(true);
 			}
 		}
 	}

@@ -68,29 +68,11 @@ public class GameControl implements Runnable, Observateur{
 			
 			if(room.getJeton() != jeton)
 			{
-				if(!message.equals(""))
-				{
-					if(room.CheckShoot(jeton, Integer.parseInt(message)).size() > 0)
-					{
-						ArrayList<Integer> listID = room.CheckShoot(jeton, Integer.parseInt(message));
-						String playerTouch = "";
-						for(int i = 0; i < listID.size(); i++)
-						{
-							playerTouch += room.getPlayerById(listID.get(i)).getNom();
-							if(i+1 < listID.size())
-								playerTouch += ", ";
-						}
+				if(!cli.LastAction().equals(""))
+					this.game.addMessage("\n"+cli.LastAction());
 
-						this.game.addMessage("Le joueur "+room.getPlayerById(jeton).getNom()+ " a touché "+playerTouch+" .");
-					}
-					else
-					{
-						this.game.addMessage("\nLe joueur "+room.getPlayerById(jeton).getNom()+ " a mis dans l'eau");
-					}
-					
-				}
+				this.game.getTourLab().setText("C'est le tour du joueur "+room.getPlayerById(room.getJeton()).getNom());
 				
-				this.game.addMessage("\nC'est le tour du joueur "+room.getPlayerById(room.getJeton()).getNom());
 				
 				jeton = room.getJeton();
 				this.game.enabledAllButton();
@@ -103,7 +85,6 @@ public class GameControl implements Runnable, Observateur{
 							this.game.enabledAllButtonIDPlayer(room.getJeton());
 					}
 				}
-				this.message = "";
 			}
 			
 			try 
@@ -115,6 +96,7 @@ public class GameControl implements Runnable, Observateur{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		}
 		
 		if(room.isFinish())

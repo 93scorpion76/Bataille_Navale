@@ -32,20 +32,19 @@ public class ThreadClient implements Runnable, Observateur{
 		{
 			if(!cli.getSock().isClosed()){
 				
-				if(!isUpdate)
 					room = cli.InfoRoom();
 				
 					for(int i = 0; i < room.getNbPlayer(); i++)
 					{
-					room = cli.InfoRoom();
+						room = cli.InfoRoom();
 			
-					salon.setPlayerName(i,room.getPlayer(i).getNom());
+						salon.setPlayerName(i,room.getPlayer(i).getNom());
 					
-					if(room.getPlayer(i).isReady())
-						salon.setStatut(i, true);
+						if(room.getPlayer(i).isReady())
+							salon.setStatut(i, true);
 					
 					}
-					
+				
 					try {
 						Thread.sleep(33);
 						isUpdate = false;

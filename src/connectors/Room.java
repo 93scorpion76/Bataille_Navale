@@ -89,6 +89,7 @@ public class Room{
 		public void setJeton(int idPlayer){jeton = idPlayer;}
 		public boolean isFinish()
 		{
+			System.out.println("Nbr de vivant : "+getNbPlayerLife());
 			if(getNbPlayerLife() <= 1)
 				return true;
 			else 

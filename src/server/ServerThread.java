@@ -84,7 +84,7 @@ public class ServerThread implements Runnable {
 									room.getPlayerById(idPlayer).setPosBateau(posBateau);
 									room.getPlayerById(idPlayer).setReady(true);
 									
-									lastAction = room.getPlayerById(idPlayer).getNom() + " a positionné son bateau !";
+									//lastAction = room.getPlayerById(idPlayer).getNom() + " a positionné son bateau !";
 								}
 										
 								// Changement du jeton. 
