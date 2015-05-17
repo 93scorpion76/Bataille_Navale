@@ -125,7 +125,6 @@ public class Client{
 			int idRoom = json.getInt("idRoom");
 			String nameRoom = json.getString("nameRoom");
 			String creatorRoom = json.getString("creatorRoom");
-			int nbPlayerLife = json.getInt("nbPlayerLife");
 			int nbPlayerMax = json.getInt("nbPlayerMax");
 			int nbPlayer = json.getInt("nbPlayer");
 			ArrayList<Player> lPlayer = new ArrayList<Player>();
@@ -136,7 +135,7 @@ public class Client{
 			boolean roomFull = json.getBoolean("roomFull");
 			int jeton = json.getInt("jeton");
 			
-			room = new Room(idRoom, nameRoom, creatorRoom, nbPlayerLife, nbPlayerMax, lPlayer, roomFull, jeton);
+			room = new Room(idRoom, nameRoom, creatorRoom, nbPlayerMax, lPlayer, roomFull, jeton);
 			
 			//System.out.println("JSON client: "+dataset);
 			

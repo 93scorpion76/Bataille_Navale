@@ -10,7 +10,6 @@ public class Room{
 		private int idRoom;
 		private String name;
 		private String creator;
-		private int nbPlayerLife; // nb de joueur encore en vie. Permet de détecter la victoire. 
 		private int nbPlayerMax; 
 		private ArrayList<Player> lPlayer;
 		private boolean roomFull;
@@ -21,17 +20,15 @@ public class Room{
 			lPlayer = new ArrayList<Player>();
 			roomFull = false;
 			this.idRoom = idRoom;
-			nbPlayerLife = 0;
 			this.nbPlayerMax = nbPlayerMax;
 			jeton = -1;
 			this.name = name;
 			this.creator = creator;
 		}
 		
-		public Room(int idRoom, String name, String creator, int nbPlayerLife, int nbPlayerMax, ArrayList<Player> lPlayer,boolean roomFull,int jeton)
+		public Room(int idRoom, String name, String creator, int nbPlayerMax, ArrayList<Player> lPlayer,boolean roomFull,int jeton)
 		{
 			this.idRoom = idRoom;
-			this.nbPlayerLife = nbPlayerLife;
 			this.nbPlayerMax = nbPlayerMax;
 			this.lPlayer = lPlayer;
 			this.roomFull = roomFull;
@@ -45,7 +42,6 @@ public class Room{
 			if(!roomFull)
 			{
 				lPlayer.add(p1);
-				nbPlayerLife = lPlayer.size();
 				if(lPlayer.size()==nbPlayerMax)
 					roomFull = true;
 				return true;
@@ -83,14 +79,12 @@ public class Room{
 		public String getCreator(){return creator;}
 		public int getNbPlayerMax(){return nbPlayerMax;}
 		public int getNbPlayerLife(){
-			
-			int Life = 0;
+			int nbPlayerLife = 0;
 			for(int i=0;i<lPlayer.size();i++)
 			{
 				if(lPlayer.get(i).isLife())
-					Life++;
+					nbPlayerLife++;
 			}
-			nbPlayerLife = Life;
 			return nbPlayerLife;
 		}
 		

@@ -60,7 +60,6 @@ public class ServerThread implements Runnable {
 								dataset.put("idRoom",room.getIdRoom());
 								dataset.put("nameRoom",room.getName());
 								dataset.put("creatorRoom", room.getCreator());
-								dataset.put("nbPlayerLife",room.getNbPlayerLife());
 								dataset.put("nbPlayerMax",room.getNbPlayerMax());
 								dataset.put("nbPlayer",room.getNbPlayer());
 								for(int i=0;i<room.getNbPlayer();i++)
