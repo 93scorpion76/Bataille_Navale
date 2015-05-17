@@ -48,140 +48,103 @@ public class Client{
 	
 	public Player ConnexionRoom(String namePlayer, int idRoom)
 	{
-		boolean methodeDone = false;
-		while(!methodeDone)
-		{
-			if(!busy)
-			{
-				busy = true;
-				InitConnexionServer();
-				player = null;
-				try{
-					JSONObject dataset = new JSONObject();
-					dataset.put("methode","joinRoom");
-					dataset.put("nomClient", namePlayer);
-					dataset.put("idRoom",idRoom);
-					// Afficher msg retour et récup idJoueur
-					JSONObject json = new JSONObject(EnvoiRequete(dataset));
-					String msgBack = (String) json.get("messageBack");
-					System.out.println("Connexion ROOM n°"+idRoom+" - Réponse serveur: "+msgBack);
-					int idPlayer = (int) json.get("idPlayer");
-					player = new Player(idPlayer,namePlayer);
-				} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
-				busy = false;
-				methodeDone = true;
-			}
-		}
+		InitConnexionServer();
+		player = null;
+		try{
+			JSONObject dataset = new JSONObject();
+			dataset.put("methode","joinRoom");
+			dataset.put("nomClient", namePlayer);
+			dataset.put("idRoom",idRoom);
+			// Afficher msg retour et récup idJoueur
+			JSONObject json = new JSONObject(EnvoiRequete(dataset));
+			String msgBack = (String) json.get("messageBack");
+			System.out.println("Connexion ROOM n°"+idRoom+" - Réponse serveur: "+msgBack);
+			int idPlayer = (int) json.get("idPlayer");
+			player = new Player(idPlayer,namePlayer);
+		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
+
 		return player;
 	}
 	
 	
 	public Player CreateRoom(String namePlayer, String nameRoom, int NbPlayerRoom)
-	{
-		boolean methodeDone = false;
-		while(!methodeDone)
-		{
-			if(!busy)
-			{
-				busy = true; 
-				InitConnexionServer();
-				player = null; 
-				try{
-					JSONObject dataset = new JSONObject();
-					dataset.put("methode","createRoom");
-					dataset.put("nameRoom",nameRoom);
-					dataset.put("nameCreator", namePlayer);	
-					dataset.put("nbPlayer",NbPlayerRoom);
-					
-					// Afficher msg retour et récup idJoueur
-					JSONObject json = new JSONObject(EnvoiRequete(dataset));
-					String msgBack = (String) json.get("messageBack");
-					System.out.println("Creation ROOM "+nameRoom+" - Réponse serveur: "+msgBack);
-					int idPlayer = (int) json.get("idPlayer");
-					player = new Player(idPlayer,namePlayer);
-				} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
-				busy = false; 
-				methodeDone = true;
-			}
-		}
+	{	
+		InitConnexionServer();
+		player = null; 
+		try{
+			JSONObject dataset = new JSONObject();
+			dataset.put("methode","createRoom");
+			dataset.put("nameRoom",nameRoom);
+			dataset.put("nameCreator", namePlayer);	
+			dataset.put("nbPlayer",NbPlayerRoom);
+			
+			// Afficher msg retour et récup idJoueur
+			JSONObject json = new JSONObject(EnvoiRequete(dataset));
+			String msgBack = (String) json.get("messageBack");
+			System.out.println("Creation ROOM "+nameRoom+" - Réponse serveur: "+msgBack);
+			int idPlayer = (int) json.get("idPlayer");
+			player = new Player(idPlayer,namePlayer);
+		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
+				
 		return player;
 	}
 	
 	public ArrayList<Room> ListRoom()
 	{
-		boolean methodeDone = false;
 		ArrayList<Room> lRoom = new ArrayList<Room>();
-		while(!methodeDone)
-		{
-			if(!busy)
+
+		InitConnexionServer();
+		try{
+			JSONObject dataset = new JSONObject();
+			dataset.put("methode","listRoom");
+			
+			// Afficher retour 
+			JSONObject json = new JSONObject(EnvoiRequete(dataset));
+			int nbRoom = json.getInt("nbRoom");
+			for(int i=0;i<nbRoom;i++)
 			{
-				busy = true; 
-				
-				InitConnexionServer();
-				try{
-					JSONObject dataset = new JSONObject();
-					dataset.put("methode","listRoom");
-					
-					// Afficher retour 
-					JSONObject json = new JSONObject(EnvoiRequete(dataset));
-					int nbRoom = json.getInt("nbRoom");
-					for(int i=0;i<nbRoom;i++)
-					{
-						int idRoom = json.getInt("idRoom"+i);
-						String nameRoom = json.getString("nameRoom"+i);
-						String creator = json.getString("creator"+i);
-						int nbPlayerMax = json.getInt("nbPlayerMax"+i);
-						lRoom.add(new Room(idRoom, nameRoom, creator, nbPlayerMax));
-					}
-				} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
-				
-				busy = false; 
-				methodeDone = true;
+				int idRoom = json.getInt("idRoom"+i);
+				String nameRoom = json.getString("nameRoom"+i);
+				String creator = json.getString("creator"+i);
+				int nbPlayerMax = json.getInt("nbPlayerMax"+i);
+				lRoom.add(new Room(idRoom, nameRoom, creator, nbPlayerMax));
 			}
-		}	
+		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
+
 		return lRoom;
 	}
 	
 	public Player getPlayer(){return player;}
 	
-	public Room InfoRoom(){
-		boolean methodeDone = false; 
+	public Room InfoRoom()
+	{
 		Room room = null;
-		while(!methodeDone)
-		{
-			if(!busy)
+
+		JSONObject dataset = new JSONObject();
+		try {
+			dataset.put("methode", "infoRoom");
+			String result = EnvoiRequete(dataset);
+			JSONObject json = new JSONObject(result);
+			//System.out.println("INFO ROOM JSON RECEPT: CONTENU:"+json.toString());
+			int idRoom = json.getInt("idRoom");
+			String nameRoom = json.getString("nameRoom");
+			String creatorRoom = json.getString("creatorRoom");
+			int nbPlayerMax = json.getInt("nbPlayerMax");
+			int nbPlayer = json.getInt("nbPlayer");
+			ArrayList<Player> lPlayer = new ArrayList<Player>();
+			for(int i=0;i<nbPlayer;i++)
 			{
-				busy = true; 
-				
-				JSONObject dataset = new JSONObject();
-				try {
-					dataset.put("methode", "infoRoom");
-					String result = EnvoiRequete(dataset);
-					JSONObject json = new JSONObject(result);
-					//System.out.println("INFO ROOM JSON RECEPT: CONTENU:"+json.toString());
-					int idRoom = json.getInt("idRoom");
-					String nameRoom = json.getString("nameRoom");
-					String creatorRoom = json.getString("creatorRoom");
-					int nbPlayerMax = json.getInt("nbPlayerMax");
-					int nbPlayer = json.getInt("nbPlayer");
-					ArrayList<Player> lPlayer = new ArrayList<Player>();
-					for(int i=0;i<nbPlayer;i++)
-					{
-						lPlayer.add(new Player(json.getInt("idPlayer"+i),json.getString("namePlayer"+i),json.getBoolean("lifePlayer"+i),json.getBoolean("readyPlayer"+i)));
-					}
-					boolean roomFull = json.getBoolean("roomFull");
-					int jeton = json.getInt("jeton");
-					
-					room = new Room(idRoom, nameRoom, creatorRoom, nbPlayerMax, lPlayer, roomFull, jeton);
-					
-					//System.out.println("JSON client: "+dataset);
-					
-				} catch (JSONException e) {System.out.println("Erreur JSON client INFO ROOM:"+e.getMessage());}
-				
-				busy = false; 
-				methodeDone = true;
+				lPlayer.add(new Player(json.getInt("idPlayer"+i),json.getString("namePlayer"+i),json.getBoolean("lifePlayer"+i),json.getBoolean("readyPlayer"+i)));
 			}
-		}
+			boolean roomFull = json.getBoolean("roomFull");
+			int jeton = json.getInt("jeton");
+			
+			room = new Room(idRoom, nameRoom, creatorRoom, nbPlayerMax, lPlayer, roomFull, jeton);
+			
+			//System.out.println("JSON client: "+dataset);
+			
+		} catch (JSONException e) {System.out.println("Erreur JSON client INFO ROOM:"+e.getMessage());}
+				
 		return room;
 	}
 	
@@ -190,128 +153,97 @@ public class Client{
 	}
 
 	public void SelectPosition(int posBateau)
-	{
-		boolean methodeDone = false; 
-		while(!methodeDone)
-		{
-			if(!busy){
-				busy = true; 
-				
-				JSONObject dataset = new JSONObject();
-				try {
-					dataset.put("methode", "selectPosition");
-					dataset.put("idPlayer",player.getId());
-					dataset.put("posBateau", posBateau);
-					EnvoiRequete(dataset);
-					//System.out.println("JSON client: "+dataset);
-				} catch (JSONException e) {System.out.println("Erreur JSON client SELEC POS:"+e.getMessage());}
-				
-				busy = false; 
-				methodeDone = true; 
-			}
-		}	
+	{			
+		JSONObject dataset = new JSONObject();
+		try {
+			dataset.put("methode", "selectPosition");
+			dataset.put("idPlayer",player.getId());
+			dataset.put("posBateau", posBateau);
+			EnvoiRequete(dataset);
+			//System.out.println("JSON client: "+dataset);
+		} catch (JSONException e) {System.out.println("Erreur JSON client SELEC POS:"+e.getMessage());}			
 	}
 	
 	public ArrayList<Integer> Shoot(int posTir)
 	{
-		boolean methodeDone = false;
 		ArrayList<Integer> retour = new ArrayList<Integer>();
-		while(!methodeDone)
-		{
-			if(!busy)
+				
+		JSONObject dataset = new JSONObject();			
+		try {
+			dataset.put("methode", "shoot");
+			dataset.put("idPlayer",player.getId());
+			dataset.put("posTir", posTir);
+			
+			//System.out.println("\nA envoyer JSON client: "+dataset);
+			
+			String result = EnvoiRequete(dataset);
+			JSONObject json = new JSONObject(result);
+			int nbPlayerDead = json.getInt("nbPlayerDead");
+			for(int i=0;i<nbPlayerDead;i++)
 			{
-				busy = true; 
-				
-				JSONObject dataset = new JSONObject();			
-				try {
-					dataset.put("methode", "shoot");
-					dataset.put("idPlayer",player.getId());
-					dataset.put("posTir", posTir);
-					
-					//System.out.println("\nA envoyer JSON client: "+dataset);
-					
-					String result = EnvoiRequete(dataset);
-					JSONObject json = new JSONObject(result);
-					int nbPlayerDead = json.getInt("nbPlayerDead");
-					for(int i=0;i<nbPlayerDead;i++)
-					{
-						retour.add(json.getInt("playerDead"+i));
-					}
-					
-				} catch (JSONException e) {System.out.println("Erreur JSON client SHOOT:"+e.getMessage());}
-				
-				busy = false; 
-				methodeDone = true;
+				retour.add(json.getInt("playerDead"+i));
 			}
-		}
-		
+			
+		} catch (JSONException e) {System.out.println("Erreur JSON client SHOOT:"+e.getMessage());}
+				
 		return (retour);	
 	}
 	
 	public void Exit()
 	{
-		boolean methodeDone = false;
-		while(!methodeDone)
+		try {
+			JSONObject dataset = new JSONObject();
+			try {
+				dataset.put("methode", "exit");
+				dataset.put("idPlayer",player.getId());
+			} catch (JSONException e) {System.out.println("Erreur JSON client EXIT:"+e.getMessage());}
+			System.out.println("JSON client: "+dataset);	
+			EnvoiRequete(dataset);
+			sock.close();
+			in.close();	
+			System.out.println("Fermeture du client.");
+		} catch (IOException e) {System.out.println("Erreur fermeture client : "+e.getMessage());}	
+	}
+	
+	public String LastAction()
+	{
+		String retour = "";			
+		JSONObject dataset = new JSONObject();	
+		try {
+			dataset.put("methode", "lastAction");
+			String result = EnvoiRequete(dataset);
+			JSONObject json = new JSONObject(result);
+			retour = json.getString("lastAction");
+		} catch (JSONException e) {System.out.println("Erreur JSON client LAST ACTION:"+e.getMessage());}
+				
+		return retour;
+	}
+	
+	private String EnvoiRequete(JSONObject dataset)
+	{
+		boolean methodeExecute = false; 
+		String rep_srv = "";
+		while(!methodeExecute)
 		{
 			if(!busy)
 			{
 				busy = true; 
 				
 				try {
-					JSONObject dataset = new JSONObject();
-					try {
-						dataset.put("methode", "exit");
-						dataset.put("idPlayer",player.getId());
-					} catch (JSONException e) {System.out.println("Erreur JSON client EXIT:"+e.getMessage());}
-					System.out.println("JSON client: "+dataset);	
-					EnvoiRequete(dataset);
-					sock.close();
-					in.close();	
-					System.out.println("Fermeture du client.");
-				} catch (IOException e) {System.out.println("Erreur fermeture client : "+e.getMessage());}
+					PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
+					out.println(dataset); // Envoi au srv du fichier json
+					
+					// Réception de la réponse du serveur
+					rep_srv = in.readLine(); 
 				
-				busy = false;
-				methodeDone = true;
-			}
-		}	
-	}
+					//System.out.println("\n Réponse serveur:"+rep_srv);
 	
-	public String LastAction()
-	{
-		boolean methodeDone = false; 
-		String retour = "";
-		while(!methodeDone)
-		{
-			if(!busy){
-				busy = true; 
-				
-				JSONObject dataset = new JSONObject();	
-				try {
-					dataset.put("methode", "lastAction");
-					String result = EnvoiRequete(dataset);
-					JSONObject json = new JSONObject(result);
-					retour = json.getString("lastAction");
-				} catch (JSONException e) {System.out.println("Erreur JSON client LAST ACTION:"+e.getMessage());}
+				} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}	
 				
 				busy = false; 
-				methodeDone = true; 
+				methodeExecute = true; 
 			}
 		}
-		return retour;
-	}
-	
-	private String EnvoiRequete(JSONObject dataset)
-	{
-		try {
-			PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
-			out.println(dataset); // Envoi au srv du fichier json
-			
-			// Réception de la réponse du serveur
-			String rep_srv = in.readLine(); 
-		
-			//System.out.println("\n Réponse serveur:"+rep_srv);
-		
-			return rep_srv;
-		} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}
+		return rep_srv;
 	}
 }
