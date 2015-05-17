@@ -21,6 +21,7 @@ import javax.swing.border.Border;
 import modele.Panneau;
 import modele.SmallButton;
 import controlers.ConnexionControl;
+import controlers.ListRoomControl;
 
 public class ConnexionView extends JFrame implements ActionListener, KeyListener{
 	
@@ -93,7 +94,7 @@ public class ConnexionView extends JFrame implements ActionListener, KeyListener
 			if(nameFT.getText() != "" && nameFT.getText().length() <= 10 && nameFT.getText().length() >=2)
 			{
 				this.dispose();
-				new ConnexionControl(nameFT.getText());
+				new ListRoomControl(nameFT.getText());
 			}
 		}
 	}
@@ -106,7 +107,7 @@ public class ConnexionView extends JFrame implements ActionListener, KeyListener
 			if(nameFT.getText() != "" && nameFT.getText().length() <= 10 && nameFT.getText().length() >=2)
 			{
 				this.dispose();
-				new ConnexionControl(nameFT.getText());
+				new ListRoomControl(nameFT.getText());
 			}
 		}
 		
