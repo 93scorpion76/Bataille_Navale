@@ -68,6 +68,11 @@ public class GameControl implements Runnable, Observateur{
 		this.game.addObservateur(this);
 		
 		int jeton = -1;
+		int []boat = new int[3];
+		int []debris = new int[3];
+		int indexBoat = 0;
+		int indexDebris = 0;
+		
 		while(!room.isFinish())
 		{
 			if(!isUpdate){
@@ -78,10 +83,31 @@ public class GameControl implements Runnable, Observateur{
 					if(!cli.LastAction().equals(""))
 						this.game.addMessage("\n"+cli.LastAction());
 					
-					this.game.getTourLab().setText("C'est le tour du joueur "+room.getPlayerById(room.getJeton()).getNom());	
+					jeton = room.getJeton();
+					
+					if(player.getId() != jeton)
+						this.game.getTourLab().setText("C'est le tour du joueur "+room.getPlayerById(room.getJeton()).getNom());
+					else
+						this.game.getTourLab().setText("C'est à votre tour de jouer !");
 				
 					jeton = room.getJeton();
 					this.game.enabledAllButton();
+					
+					indexDebris = 0;
+					indexBoat = 0;
+					for(int i = 0; i <  room.getNbPlayer(); i++)
+					{
+						if(room.getPlayer(i).isLife()){
+							boat[indexBoat] = room.getPlayer(i).getPosBateau();
+							indexBoat++;	
+						}		
+						else
+						{
+							debris[indexDebris] = room.getPlayer(i).getPosBateau();
+							indexDebris++;
+						}
+					}
+					
 					for(int i = 0; i < room.getNbPlayer(); i++)
 					{
 						if(room.getJeton() == room.getPlayer(i).getId())
@@ -89,6 +115,10 @@ public class GameControl implements Runnable, Observateur{
 							i = room.getNbPlayer();
 							if(!this.game.getButtonEnabled())
 								this.game.enabledAllButtonIDPlayer(room.getJeton());
+						}
+						else if(!room.getPlayer(i).isLife())
+						{
+							this.game.Observateur(boat, debris);
 						}
 					}
 				}
@@ -108,7 +138,9 @@ public class GameControl implements Runnable, Observateur{
 		
 		if(room.isFinish())
 		{
+			this.game.addMessage("\n"+cli.LastAction());
 			this.game.enabledAllButton();
+			int timeWait  = 7;
 			
 			String nameWinner ="";
 			for(int i = 0; i < room.getNbPlayer(); i++)
@@ -118,14 +150,14 @@ public class GameControl implements Runnable, Observateur{
 			}
 			
 			this.game.addMessage("\nLe joueur "+nameWinner+" a gagné !");
-			this.game.addMessage("\nRetour a la liste des batailles dans 5 secondes.");
+			this.game.addMessage("\nRetour a la liste des batailles dans "+timeWait+" secondes.\n\n");
 			
 			float date = 0;
 			boolean affiche = true;
 			String var = "";
 			int tmpSec;
 			
-			while(date <= 5.0)
+			while(date <= timeWait)
 			{
 				date += 0.033;
 				
@@ -138,9 +170,7 @@ public class GameControl implements Runnable, Observateur{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-
-				tmpSec = (int) ((int)5 - date);
+				tmpSec = (int) ((int)timeWait - date);
 				if(var.indexOf(tmpSec+"") == -1)
 				{
 					affiche = true;
@@ -148,7 +178,7 @@ public class GameControl implements Runnable, Observateur{
 				
 				if(affiche){
 					var += tmpSec;
-					this.game.addMessage("\n"+tmpSec+" secondes restantes...");
+					this.game.addMessage(tmpSec+"... ");
 					affiche = false;
 				}
 				

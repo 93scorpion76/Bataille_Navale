@@ -40,20 +40,12 @@ public class ThreadClient implements Runnable, Observateur{
 					{
 						room = cli.InfoRoom();
 			
-						salon.setPlayerName(i,room.getPlayer(i).getNom());
+						salon.setPlayerName(i,room.getPlayer(i));
 					
 						if(room.getPlayer(i).isReady())
 							salon.setStatut(i, true);
 					
 					}
-				
-					try {
-						Thread.sleep(33);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			
 				}
 				
 				try {

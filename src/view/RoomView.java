@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
@@ -43,6 +44,8 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 	private int sizeWidth = 1366/2;
 	private int sizeHeight = 725/2;
 	
+	private int positionPlayer;
+	
 	//Création collection d'observateur
 	private ArrayList<Observateur> listObservateur = new ArrayList<Observateur>();
 	
@@ -54,11 +57,13 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
+		
 		/* image
 			ImageIcon ImageIcon = new ImageIcon("icone.jpg");
 			Image Image = ImageIcon.getImage();
 			this.setIconImage(Image);
 		 */
+		
 		chooseBoat = new ActionButton[16];
 		namePlayer = new JLabel[4];
 		isReady = new CaseACocher[4];
@@ -86,6 +91,7 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 			panPlayer.add(namePlayer[i]);
 			panPlayer.add(isReady[i]);
 		}
+		
 		
 		gl = new GridLayout(4,4);
 		gl.setHgap(20);
@@ -137,6 +143,7 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 			if(player.getPosBateau() != 0){
 				ActionButton.setChoose(true);
 				player.setReady(true);
+				ready.setEnabled(false);
 				System.out.println("Position choisi : "+player.getPosBateau());
 				this.updateObservateur("choosePosition");
 			}
@@ -160,9 +167,14 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 		}
 	}
 	
-	public void setPlayerName(int position, String name)
+	public void setPlayerName(int position, Player playerName)
 	{
-		namePlayer[position].setText(name);
+		if(player.getId() == playerName.getId()){
+			positionPlayer = position;
+			namePlayer[positionPlayer].setForeground(new Color(145, 10, 10));
+		}
+		
+		namePlayer[position].setText(playerName.getNom());
 		isReady[position].setVisible(true);
 	}
 	

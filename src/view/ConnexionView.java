@@ -9,11 +9,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -24,11 +27,11 @@ import controlers.ConnexionControl;
 import controlers.ListControl;
 import controlers.ListRoomControl;
 
-public class ConnexionView extends JFrame implements ActionListener, KeyListener{
+public class ConnexionView extends JFrame implements ActionListener, KeyListener, MouseListener{
 	
 	private JLabel Game = new JLabel("Bienvenu matelos ! Prépare toi à prendre le large");
 	
-	private JTextField nameFT = new JTextField("");
+	private JTextField nameFT = new JTextField("Nom du navire");
 	
 	private SmallButton connexionGame = new SmallButton("Levez les voiles !!!");
 	
@@ -64,9 +67,9 @@ public class ConnexionView extends JFrame implements ActionListener, KeyListener
 		this.connexionGame.setBounds(0,543,793,40);
 		this.nameFT.setBounds(352,400,100,80);
 		this.nameFT.setBackground(Color.getHSBColor(187, 93, 52));
-		this.nameFT.setFont(new Font("Serif", Font.BOLD, 36));
+		this.nameFT.setFont(new Font("Serif", Font.BOLD, 20));
 		this.nameFT.addKeyListener(this);
-		this.nameFT.requestFocus();
+		this.nameFT.addMouseListener(this);
 		
 		//Compound borders
 		Border compound;
@@ -97,7 +100,10 @@ public class ConnexionView extends JFrame implements ActionListener, KeyListener
 				this.dispose();
 				new ListControl(nameFT.getText());
 			}
+			else
+				JOptionPane.showMessageDialog(null, "Le nom de votre navire doit être compris entre 2 et 10 caractères.", "Erreur : Nom de navire", JOptionPane.ERROR_MESSAGE);
 		}
+		
 	}
 
 	@Override
@@ -111,6 +117,14 @@ public class ConnexionView extends JFrame implements ActionListener, KeyListener
 				//new ListRoomControl(nameFT.getText());
 				new ListControl(nameFT.getText());
 			}
+			else
+				JOptionPane.showMessageDialog(null, "Le nom de votre navire doit être compris entre 2 et 10 caractères.", "Erreur : Nom de navire", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		if(nameFT.getText().equals("Nom du navire"))
+		{
+			nameFT.setText("");
+			this.nameFT.setFont(new Font("Serif", Font.BOLD, 36));
 		}
 		
 	}
@@ -123,6 +137,42 @@ public class ConnexionView extends JFrame implements ActionListener, KeyListener
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent event) {
+		// TODO Auto-generated method stub
+		if(event.getSource() == nameFT)
+		{
+			if(nameFT.getText().equals("Nom du navire")){
+				nameFT.setText("");
+				this.nameFT.setFont(new Font("Serif", Font.BOLD, 36));
+			}
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}

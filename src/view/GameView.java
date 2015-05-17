@@ -204,4 +204,23 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		int tmp = id-1;
 		return chooseCible[tmp];
 	}
+	
+	public void Observateur(int[] boat, int[]debris)
+	{
+		for(int i = 0; i < 16; i++)
+		{
+			if(i+1 == boat[i])
+			{
+				chooseCible[i].changeBoat();
+			}
+			else if(i+1 == debris[i])
+			{
+				chooseCible[i].changeDebris();
+			}
+			else
+			{
+				chooseCible[i].changeInvisible();
+			}
+		}
+	}
 }
