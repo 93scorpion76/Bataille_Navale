@@ -121,17 +121,19 @@ public class Server {
 						
 						
 					case "listRoom": // Liste les rooms où la partie n'est pas commencé et où il y a encore de la place.
-						dataset.put("nbRoom",lThread.size());
+						int nbRoom = 0;
 						for(int i=0;i<lThread.size();i++)
 						{
 							if(!lThread.get(i).getRoom().isFull() && !lThread.get(i).getRoom().isStart())
 							{
+								nbRoom++;
 								dataset.put("idRoom"+i,lThread.get(i).getRoom().getIdRoom());
 								dataset.put("nameRoom"+i,lThread.get(i).getRoom().getName());
 								dataset.put("creator"+i,lThread.get(i).getRoom().getCreator());
 								dataset.put("nbPlayerMax"+i,lThread.get(i).getRoom().getNbPlayerMax());
 							}	
 						}
+						dataset.put("nbRoom",nbRoom);
 						out.println(dataset); // Envoi au client le fichier json
 						break;
 				}

@@ -11,7 +11,7 @@ public class ThreadClient implements Runnable, Observateur{
 	private RoomView salon;
 	private Client cli;
 	private ConnexionControl connexionControl;
-	private boolean isUpdate = false;
+	private boolean isUpdate = false; 
 	
 	public ThreadClient(RoomView salon, Client cli, ConnexionControl connexionControl)
 	{
@@ -24,7 +24,6 @@ public class ThreadClient implements Runnable, Observateur{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-	
 		Room room = cli.InfoRoom();
 		salon.addObservateur(this);
 		
@@ -44,16 +43,14 @@ public class ThreadClient implements Runnable, Observateur{
 					
 						if(room.getPlayer(i).isReady())
 							salon.setStatut(i, true);
-					
 					}
-				
+					
 					try {
 						Thread.sleep(33);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			
 				}
 				
 				try {
@@ -79,6 +76,7 @@ public class ThreadClient implements Runnable, Observateur{
 	public void update(String string, String appel) {
 		// TODO Auto-generated method stub
 		isUpdate = true;
+
 		if(string.equals("choosePosition")){
 			cli.SelectPosition(Integer.parseInt(appel));
 			isUpdate = false;
@@ -87,6 +85,8 @@ public class ThreadClient implements Runnable, Observateur{
 			cli.Exit();
 			salon.dispose();
 		}
+
+		
 	}
 
 
