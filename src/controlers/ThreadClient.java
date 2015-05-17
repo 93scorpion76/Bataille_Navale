@@ -29,13 +29,10 @@ public class ThreadClient implements Runnable, Observateur{
 		while(!room.isStart())
 		{
 			if(!cli.getSock().isClosed()){
-				
 					room = cli.InfoRoom();
 			
 					for(int i = 0; i < room.getNbPlayer(); i++)
-					{
-						
-						
+					{	
 						/*if(room.getPlayer(i).getPosBateau() != 0)
 						System.out.print(room.getPlayer(i).isReady()+" : "+room.getPlayer(i).getPosBateau()+"\t");
 						 */
