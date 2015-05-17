@@ -23,6 +23,7 @@ public class Client{
 	private InputStreamReader isr; 
 	private BufferedReader in;
 	private Player player;
+	private boolean busy = false; 
 	
 	public Client(String ip, int port){
 		this.ip = ip; 
@@ -61,13 +62,13 @@ public class Client{
 			int idPlayer = (int) json.get("idPlayer");
 			player = new Player(idPlayer,namePlayer);
 		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
-		
+
 		return player;
 	}
 	
 	
 	public Player CreateRoom(String namePlayer, String nameRoom, int NbPlayerRoom)
-	{
+	{	
 		InitConnexionServer();
 		player = null; 
 		try{
@@ -84,14 +85,15 @@ public class Client{
 			int idPlayer = (int) json.get("idPlayer");
 			player = new Player(idPlayer,namePlayer);
 		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
-		
+				
 		return player;
 	}
 	
 	public ArrayList<Room> ListRoom()
 	{
-		InitConnexionServer();
 		ArrayList<Room> lRoom = new ArrayList<Room>();
+
+		InitConnexionServer();
 		try{
 			JSONObject dataset = new JSONObject();
 			dataset.put("methode","listRoom");
@@ -108,14 +110,16 @@ public class Client{
 				lRoom.add(new Room(idRoom, nameRoom, creator, nbPlayerMax));
 			}
 		} catch (Exception e) { System.out.println("Erreur client:"+e.getMessage());}
-		
+
 		return lRoom;
 	}
 	
 	public Player getPlayer(){return player;}
 	
-	public Room InfoRoom(){
+	public Room InfoRoom()
+	{
 		Room room = null;
+
 		JSONObject dataset = new JSONObject();
 		try {
 			dataset.put("methode", "infoRoom");
@@ -140,7 +144,7 @@ public class Client{
 			//System.out.println("JSON client: "+dataset);
 			
 		} catch (JSONException e) {System.out.println("Erreur JSON client INFO ROOM:"+e.getMessage());}
-		
+				
 		return room;
 	}
 	
@@ -149,7 +153,7 @@ public class Client{
 	}
 
 	public void SelectPosition(int posBateau)
-	{
+	{			
 		JSONObject dataset = new JSONObject();
 		try {
 			dataset.put("methode", "selectPosition");
@@ -157,13 +161,14 @@ public class Client{
 			dataset.put("posBateau", posBateau);
 			EnvoiRequete(dataset);
 			//System.out.println("JSON client: "+dataset);
-		} catch (JSONException e) {System.out.println("Erreur JSON client SELEC POS:"+e.getMessage());}
+		} catch (JSONException e) {System.out.println("Erreur JSON client SELEC POS:"+e.getMessage());}			
 	}
 	
 	public ArrayList<Integer> Shoot(int posTir)
 	{
-		JSONObject dataset = new JSONObject();
 		ArrayList<Integer> retour = new ArrayList<Integer>();
+				
+		JSONObject dataset = new JSONObject();			
 		try {
 			dataset.put("methode", "shoot");
 			dataset.put("idPlayer",player.getId());
@@ -180,6 +185,7 @@ public class Client{
 			}
 			
 		} catch (JSONException e) {System.out.println("Erreur JSON client SHOOT:"+e.getMessage());}
+				
 		return (retour);	
 	}
 	
@@ -196,34 +202,48 @@ public class Client{
 			sock.close();
 			in.close();	
 			System.out.println("Fermeture du client.");
-		} catch (IOException e) {System.out.println("Erreur fermeture client : "+e.getMessage());}
+		} catch (IOException e) {System.out.println("Erreur fermeture client : "+e.getMessage());}	
 	}
 	
 	public String LastAction()
 	{
-		JSONObject dataset = new JSONObject();
-		String retour = "";
+		String retour = "";			
+		JSONObject dataset = new JSONObject();	
 		try {
 			dataset.put("methode", "lastAction");
 			String result = EnvoiRequete(dataset);
 			JSONObject json = new JSONObject(result);
 			retour = json.getString("lastAction");
 		} catch (JSONException e) {System.out.println("Erreur JSON client LAST ACTION:"+e.getMessage());}
+				
 		return retour;
 	}
 	
 	private String EnvoiRequete(JSONObject dataset)
 	{
-		try {
-			PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
-			out.println(dataset); // Envoi au srv du fichier json
-			
-			// Réception de la réponse du serveur
-			String rep_srv = in.readLine(); 
-		
-			//System.out.println("\n Réponse serveur:"+rep_srv);
-		
-			return rep_srv;
-		} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}
+		boolean methodeExecute = false; 
+		String rep_srv = "";
+		while(!methodeExecute)
+		{
+			if(!busy)
+			{
+				busy = true; 
+				
+				try {
+					PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
+					out.println(dataset); // Envoi au srv du fichier json
+					
+					// Réception de la réponse du serveur
+					rep_srv = in.readLine(); 
+				
+					//System.out.println("\n Réponse serveur:"+rep_srv);
+	
+				} catch (Exception e) {System.out.println("Erreur client:"+e.getMessage());return null;}	
+				
+				busy = false; 
+				methodeExecute = true; 
+			}
+		}
+		return rep_srv;
 	}
 }
