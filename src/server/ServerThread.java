@@ -76,12 +76,15 @@ public class ServerThread implements Runnable {
 						case "selectPosition":
 							// Lecture de l'idPlayer et de la posBateau. 
 							idPlayer = Integer.parseInt(json.getString("idPlayer"));
-							int posBateau = Integer.parseInt(json.getString("posBateau"));
-							room.getPlayerById(idPlayer).setPosBateau(posBateau);
-							room.getPlayerById(idPlayer).setReady(true);
-							
-							lastAction = room.getPlayerById(idPlayer).getNom() + " a positionné son bateau !";
-							
+							if(!room.getPlayerById(idPlayer).isReady())
+							{
+								int posBateau = Integer.parseInt(json.getString("posBateau"));
+								room.getPlayerById(idPlayer).setPosBateau(posBateau);
+								room.getPlayerById(idPlayer).setReady(true);
+								
+								lastAction = room.getPlayerById(idPlayer).getNom() + " a positionné son bateau !";
+							}
+									
 							// Changement du jeton. 
 							if(room.getNbPlayer() == room.getNbPlayerMax()){
 								// est-ce que tous le joueurs sont prêt ? 
@@ -129,7 +132,16 @@ public class ServerThread implements Runnable {
 							
 							lsock.get(s).close();	
 							
-							room.getPlayerById(idPlayer).Kill();
+							// Si la room a commencé, on kill le joueur. Sinon on le supprime carrément de la liste.
+							if(room.isStart())
+							{
+								room.getPlayerById(idPlayer).Kill();
+							}
+							else
+							{
+								room.removePlayerById(idPlayer);
+							}
+							
 							lastAction = room.getPlayerById(idPlayer).getNom()+" est mort en quittant la partie.";
 							
 							if(room.getJeton() == idPlayer)
