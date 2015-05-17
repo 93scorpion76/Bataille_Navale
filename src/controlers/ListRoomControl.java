@@ -12,7 +12,6 @@ public class ListRoomControl implements Runnable, Observateur{
 	private ListRoomView roomView;
 	private String namePlayer;
 	private ListControl listControl;
-	private boolean isUpdate = false;
 	
 	/*public ListRoomControl(String name)
 	{
@@ -40,7 +39,6 @@ public class ListRoomControl implements Runnable, Observateur{
 		this.roomView.addObservateur(this);
 		while(cli.getPlayer() == null)
 		{
-			if(!isUpdate)
 				this.roomView.refreshTable(cli.ListRoom());
 
 			try 
@@ -58,7 +56,6 @@ public class ListRoomControl implements Runnable, Observateur{
 	@Override
 	public void update(String string, String appel) {
 		// TODO Auto-generated method stub
-		isUpdate = true;
 		
 		Player player = null;
 		if(string.equals("create")){
@@ -71,7 +68,6 @@ public class ListRoomControl implements Runnable, Observateur{
 				new ConnexionControl(player, cli);
 			}
 		}
-		isUpdate = false;
 		roomView.dispose();
 	}
 }

@@ -5,10 +5,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,18 +49,18 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	
 	public GameView(Player player)
 	{
-		this.setTitle("Bataille Navale : "+player.getNom()+" - "+player.getId());
+		this.setTitle("Bataille Navale");
 		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		
 		
 		this.player = player;
-		/* image
-			ImageIcon ImageIcon = new ImageIcon("icone.jpg");
+		
+			ImageIcon ImageIcon = new ImageIcon("image/icone.png");
 			Image Image = ImageIcon.getImage();
 			this.setIconImage(Image);
-		*/
+		
 		
 		leftPan = new PanneauColor(1);
 		leftPan.setLayout(new BorderLayout());
@@ -78,7 +80,6 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		text.setWrapStyleWord(true);
 		text.setEditable(false);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		
 
 		text.setOpaque(false);
 		scrollPane.setOpaque(false);
@@ -175,10 +176,6 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	public void addMessage(String message)
 	{
 		text.append(message);
-		/*JScrollBar sb = scrollPane.getVerticalScrollBar();
-		sb.setValue( sb.getMaximum() );*/
-		
-		//scrollPane.setV
 	}
 	
 	@Override

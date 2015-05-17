@@ -5,9 +5,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -52,11 +54,10 @@ public class CreateView extends JFrame implements ActionListener{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		
-		/* image
-		ImageIcon ImageIcon = new ImageIcon("icone.jpg");
+		ImageIcon ImageIcon = new ImageIcon("image/icone.png");
 		Image Image = ImageIcon.getImage();
 		this.setIconImage(Image);
-		 */
+		 
 		
 		this.namePlayer = namePlayer;
 		this.cli = cli;
@@ -177,7 +178,6 @@ public class CreateView extends JFrame implements ActionListener{
 			((JRadioButton)event.getSource()).setSelected(true);
 			
 			nbrChoose = Integer.parseInt(tmp.substring(0, tmp.indexOf(" ")));
-			System.out.println(nbrChoose);
 		}
 	}
 }

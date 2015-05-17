@@ -2,11 +2,13 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -45,11 +47,10 @@ public class ListRoomView extends JFrame implements ActionListener, Observable, 
 		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		/* image
-			ImageIcon ImageIcon = new ImageIcon("icone.jpg");
-			Image Image = ImageIcon.getImage();
-			this.setIconImage(Image);
-		*/
+		ImageIcon ImageIcon = new ImageIcon("image/icone.png");
+		Image Image = ImageIcon.getImage();
+		this.setIconImage(Image);
+		
 		
 		Object data [][] = new Object[1][title.length];
 		

@@ -42,11 +42,11 @@ public class ConnexionView extends JFrame implements ActionListener, KeyListener
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		/* image
-			ImageIcon ImageIcon = new ImageIcon("icone.jpg");
+		
+			ImageIcon ImageIcon = new ImageIcon("image/icone.png");
 			Image Image = ImageIcon.getImage();
 			this.setIconImage(Image);
-		 */
+		 
 		
 		nameFT.setPreferredSize(new Dimension(200, 40));
 		JPanel pan = new JPanel();

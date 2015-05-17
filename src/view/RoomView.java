@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -53,16 +54,15 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 	{
 		this.player = player;
 		
-		this.setTitle("Bataille Navale "+player.getId());
+		this.setTitle("Bataille Navale ");
 		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		
-		/* image
-			ImageIcon ImageIcon = new ImageIcon("icone.jpg");
-			Image Image = ImageIcon.getImage();
-			this.setIconImage(Image);
-		 */
+		ImageIcon ImageIcon = new ImageIcon("image/icone.png");
+		Image Image = ImageIcon.getImage();
+		this.setIconImage(Image);
+		 
 		
 		chooseBoat = new ActionButton[16];
 		namePlayer = new JLabel[4];

@@ -17,7 +17,6 @@ public class GameControl implements Runnable, Observateur{
 	private Room room;
 	
 	private String message;
-	private boolean isUpdate = false;
 	
 	public GameControl(Client cli)
 	{
@@ -34,7 +33,6 @@ public class GameControl implements Runnable, Observateur{
 	@Override
 	public void update(String string, String appel) {
 		// TODO Auto-generated method stub
-		isUpdate = true;
 		if(string.equals("shoot"))
 		{
 			message = appel;
@@ -49,7 +47,6 @@ public class GameControl implements Runnable, Observateur{
 				this.game.getActionButton(Integer.parseInt(appel)).changeDebris();
 			}
 			
-			isUpdate = false;
 		}
 		else if(string.equals("exit"))
 		{
@@ -73,7 +70,6 @@ public class GameControl implements Runnable, Observateur{
 		
 		while(!room.isFinish())
 		{
-			if(!isUpdate){
 				this.room = cli.InfoRoom();
 			
 				if(room.getJeton() != jeton)
@@ -105,12 +101,6 @@ public class GameControl implements Runnable, Observateur{
 						}
 					}
 					
-					for(int i = 0; i < room.getNbPlayer(); i++)
-					{
-						System.out.println(i+" : bateau "+boat[i]);
-						System.out.println(i+" : debris "+debris[i]);
-					}
-					
 					if(!room.getPlayerById(player.getId()).isLife())
 					{
 						this.game.Observateur(player.getId(),boat, debris);
@@ -128,7 +118,7 @@ public class GameControl implements Runnable, Observateur{
 						}
 					}
 				}
-			}
+			
 			
 			try 
 			{
