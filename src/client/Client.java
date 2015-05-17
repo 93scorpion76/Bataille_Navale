@@ -134,7 +134,7 @@ public class Client{
 			ArrayList<Player> lPlayer = new ArrayList<Player>();
 			for(int i=0;i<nbPlayer;i++)
 			{
-				lPlayer.add(new Player(json.getInt("idPlayer"+i),json.getString("namePlayer"+i),json.getBoolean("lifePlayer"+i),json.getBoolean("readyPlayer"+i)));
+				lPlayer.add(new Player(json.getInt("idPlayer"+i),json.getString("namePlayer"+i),json.getBoolean("lifePlayer"+i),json.getBoolean("readyPlayer"+i),json.getInt("posBateau"+i)));
 			}
 			boolean roomFull = json.getBoolean("roomFull");
 			int jeton = json.getInt("jeton");
