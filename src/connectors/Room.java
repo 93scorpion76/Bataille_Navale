@@ -82,7 +82,18 @@ public class Room{
 		public String getName(){return name;}
 		public String getCreator(){return creator;}
 		public int getNbPlayerMax(){return nbPlayerMax;}
-		public int getNbPlayerLife(){return nbPlayerLife;}
+		public int getNbPlayerLife(){
+			
+			int Life = 0;
+			for(int i=0;i<lPlayer.size();i++)
+			{
+				if(lPlayer.get(i).isLife())
+					Life++;
+			}
+			nbPlayerLife = Life;
+			return nbPlayerLife;
+		}
+		
 		public int getNbPlayer(){return lPlayer.size();}
 		public boolean isFull(){return roomFull;}
 		public int getJeton(){return jeton;}
