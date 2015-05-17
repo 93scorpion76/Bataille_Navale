@@ -34,6 +34,7 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 	
 	private ActionButton[]chooseBoat;
 	
+	private JLabel nbPlayerMax;
 	private JLabel[]namePlayer;
 	private CaseACocher[] isReady;
 	
@@ -49,11 +50,12 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 	
 	//Création collection d'observateur
 	private ArrayList<Observateur> listObservateur = new ArrayList<Observateur>();
+	private int nbrPlayer;
 	
 	public RoomView(Player player)
 	{
 		this.player = player;
-		
+
 		this.setTitle("Bataille Navale ");
 		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,11 +80,11 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 		JPanel panPlayer = new JPanel();
 		panPlayer.setLayout(gl);
 		
-		int tmp;
+		
 		for(int i = 0; i < 4; i++)
 		{
-			tmp = i+1;
 			namePlayer[i] = new JLabel("");
+			
 			namePlayer[i].setFont(new Font("Serif", Font.BOLD, 30));
 			
 			isReady[i] = new CaseACocher("");
@@ -97,6 +99,8 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 		gl.setHgap(20);
 		gl.setVgap(20);
 		rightPan.setLayout(gl);
+		
+		int tmp;
 		for(int i = 0; i < 16; i++)
 		{
 			tmp = i+1;
@@ -113,8 +117,14 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 		leftPan.setLayout(gl);
 		leftPan.add(ready);
 		leftPan.add(panPlayer);
-		exit.setPreferredSize(new Dimension(sizeWidth/2,sizeHeight/15));
+		exit.setPreferredSize(new Dimension(sizeWidth/2,sizeHeight/10));
 		JPanel panTmp =  new JPanel(new BorderLayout());
+		
+		nbPlayerMax = new JLabel();
+		nbPlayerMax.setFont(new Font("Serif", Font.BOLD, 15));
+		nbPlayerMax.setHorizontalAlignment(JLabel.CENTER);
+		
+		panTmp.add(nbPlayerMax, BorderLayout.CENTER);
 		panTmp.add(exit, BorderLayout.SOUTH);
 		leftPan.add(panTmp);
 		
@@ -165,6 +175,14 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 			}
 		
 		}
+	}
+	
+	public void setNbPlayer(int nb)
+	{
+		if(nb == 0)
+			nbPlayerMax.setText("Selection position bateau en cours");
+		else
+			nbPlayerMax.setText("Nombre de pirates attendus "+nb);
 	}
 	
 	public void setPlayerName(int position, Player playerName)

@@ -118,7 +118,7 @@ public class GameView extends JFrame implements ActionListener, Observable{
 		centerPan.add(rightPan);
 		
 		this.setContentPane(centerPan);
-		//this.setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
 	}

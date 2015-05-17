@@ -150,7 +150,7 @@ public class CreateView extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		if(event.getSource() == create)
 		{
-			if(nameRoomTF.getText().length() > 2 && nameRoomTF.getText().length() < 15){
+			if(nameRoomTF.getText().length() >= 2 && nameRoomTF.getText().length() <= 15){
 				Player player = cli.CreateRoom(namePlayer, nameRoomTF.getText(), nbrChoose);
 				if(player != null){
 					this.dispose();
