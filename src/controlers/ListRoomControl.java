@@ -2,6 +2,7 @@ package controlers;
 
 import observer.Observateur;
 import connectors.Player;
+import view.CreateView;
 import view.ListRoomView;
 import client.Client;
 
@@ -17,7 +18,7 @@ public class ListRoomControl implements Runnable, Observateur{
 
 		namePlayer = name;
 
-		roomView = new ListRoomView();
+		roomView = new ListRoomView(namePlayer);
 		roomView.addObservateur(this);
 		
 		if(cli.ListRoom().size() > 0)
@@ -53,17 +54,17 @@ public class ListRoomControl implements Runnable, Observateur{
 		// TODO Auto-generated method stub
 		Player player = null;
 		if(string.equals("create")){
-			player = cli.CreateRoom(namePlayer, "Pouet", 4);
-			
+			new CreateView(namePlayer, cli);
 		}
 		else if(string.equals("join"))
 		{
 			player = cli.ConnexionRoom(namePlayer, Integer.parseInt(appel));
+			if(player != null){
+				new ConnexionControl(player, cli);
+			}
 		}
+		roomView.dispose();
 		
-		if(player != null){
-			roomView.dispose();
-			new ConnexionControl(player, cli);
-		}
+		
 	}
 }

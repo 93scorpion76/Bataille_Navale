@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 
 public class SmallButton extends JButton implements MouseListener{
@@ -23,7 +24,7 @@ public class SmallButton extends JButton implements MouseListener{
 		super(str);
 		this.setForeground(Color.WHITE);
 		this.setFont(new Font("Serif", Font.BOLD, 30));
-		
+		this.setHorizontalTextPosition(JLabel.CENTER);
 		this.addMouseListener(this);
 
 		this.lienOn = "image/smallButton_On.jpg";

@@ -11,6 +11,7 @@ public class ThreadClient implements Runnable, Observateur{
 	private RoomView salon;
 	private Client cli;
 	private ConnexionControl connexionControl;
+	private boolean isUpdate = false;
 	
 	public ThreadClient(RoomView salon, Client cli, ConnexionControl connexionControl)
 	{
@@ -18,6 +19,7 @@ public class ThreadClient implements Runnable, Observateur{
 		this.cli = cli;
 		this.connexionControl = connexionControl;
 	}
+	
 	
 	@Override
 	public void run() {
@@ -30,12 +32,11 @@ public class ThreadClient implements Runnable, Observateur{
 		{
 			if(!cli.getSock().isClosed()){
 				
+				if(!isUpdate)
 					room = cli.InfoRoom();
 			
 					for(int i = 0; i < room.getNbPlayer(); i++)
 					{
-						
-						
 						/*if(room.getPlayer(i).getPosBateau() != 0)
 						System.out.print(room.getPlayer(i).isReady()+" : "+room.getPlayer(i).getPosBateau()+"\t");
 						 */
@@ -48,6 +49,7 @@ public class ThreadClient implements Runnable, Observateur{
 					
 					try {
 						Thread.sleep(33);
+						isUpdate = false;
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -70,6 +72,7 @@ public class ThreadClient implements Runnable, Observateur{
 	@Override
 	public void update(String string, String appel) {
 		// TODO Auto-generated method stub
+		isUpdate = true;
 		if(string.equals("choosePosition")){
 			cli.SelectPosition(Integer.parseInt(appel));
 		}

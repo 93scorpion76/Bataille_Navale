@@ -39,13 +39,14 @@ public class GameView extends JFrame implements ActionListener, Observable{
 	private Player player;
 	
 	private int sizeWidth = 1366/2;
-	private int sizeHeight = 725;
+	private int sizeHeight = 725/2;
 	
 	public GameView(Player player)
 	{
 		this.setTitle("Bataille Navale : "+player.getNom()+" - "+player.getId());
 		this.setSize(sizeWidth, sizeHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
 		
 		
 		this.player = player;

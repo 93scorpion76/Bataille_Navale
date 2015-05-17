@@ -34,7 +34,7 @@ public class CaseACocher  extends JButton{
 	public void paintComponent(Graphics g){   
 		  this.setContentAreaFilled(false);
 		  this.setBorderPainted(false);
-		  g.drawImage(image, 0, 0,this.getWidth(), this.getHeight(), this);
+		  g.drawImage(image, 0, 0,this.getWidth()/2, this.getHeight(), this);
 		  
 	}
 	

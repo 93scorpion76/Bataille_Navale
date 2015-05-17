@@ -41,7 +41,7 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 	private static Player player;
 	
 	private int sizeWidth = 1366/2;
-	private int sizeHeight = 725;
+	private int sizeHeight = 725/2;
 	
 	//Création collection d'observateur
 	private ArrayList<Observateur> listObservateur = new ArrayList<Observateur>();
@@ -59,7 +59,6 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 			Image Image = ImageIcon.getImage();
 			this.setIconImage(Image);
 		 */
-		//this.Game.setHorizontalAlignment();
 		chooseBoat = new ActionButton[16];
 		namePlayer = new JLabel[4];
 		isReady = new CaseACocher[4];
