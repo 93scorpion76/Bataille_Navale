@@ -90,8 +90,10 @@ public class ServerThread implements Runnable {
 								// Changement du jeton. 
 								if(room.getNbPlayer() == room.getNbPlayerMax()){
 									// est-ce que tous le joueurs sont prêt ? 
-									if(room.isStart())
+									if(room.isStart()){
 										room.setJeton(room.getPlayer(0).getId()); // On donne le premier jeton ! 
+										lastAction = "La partie commence !";
+									}
 								}		
 								
 								dataset.put("messageBack", "OK");
@@ -125,8 +127,10 @@ public class ServerThread implements Runnable {
 									// Changement du jeton
 									room.setJeton(room.NextPlayer(idPlayer));		
 								}
-								else
+								else{
 									System.out.println("ERREUR: Ce n'est pas toi qui a le JETON !");
+									out.println("Erreur, le jeton n'est pas à toi !");
+								}
 							break;
 							
 							case "exit":

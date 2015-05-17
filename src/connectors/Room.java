@@ -82,7 +82,18 @@ public class Room{
 		public String getName(){return name;}
 		public String getCreator(){return creator;}
 		public int getNbPlayerMax(){return nbPlayerMax;}
-		public int getNbPlayerLife(){return nbPlayerLife;}
+		public int getNbPlayerLife(){
+			
+			int Life = 0;
+			for(int i=0;i<lPlayer.size();i++)
+			{
+				if(lPlayer.get(i).isLife())
+					Life++;
+			}
+			nbPlayerLife = Life;
+			return nbPlayerLife;
+		}
+		
 		public int getNbPlayer(){return lPlayer.size();}
 		public boolean isFull(){return roomFull;}
 		public int getJeton(){return jeton;}
@@ -142,7 +153,7 @@ public class Room{
 		{
 			// Si tous les players sont prêt alors la room est prête.
 			boolean start = false;
-			if(lPlayer.size() >= 2){
+			if(lPlayer.size() == nbPlayerMax){
 				start = true;
 				for(int i=0;i<lPlayer.size();i++)
 				{
