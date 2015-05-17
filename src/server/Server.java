@@ -120,11 +120,11 @@ public class Server {
 						break;
 						
 						
-					case "listRoom": // Liste les rooms où il y a encore de la place.
+					case "listRoom": // Liste les rooms où la partie n'est pas commencé et où il y a encore de la place.
 						dataset.put("nbRoom",lThread.size());
 						for(int i=0;i<lThread.size();i++)
 						{
-							if(!lThread.get(i).getRoom().isFull())
+							if(!lThread.get(i).getRoom().isFull() && !lThread.get(i).getRoom().isStart())
 							{
 								dataset.put("idRoom"+i,lThread.get(i).getRoom().getIdRoom());
 								dataset.put("nameRoom"+i,lThread.get(i).getRoom().getName());

@@ -121,6 +121,7 @@ public class Client{
 			dataset.put("methode", "infoRoom");
 			String result = EnvoiRequete(dataset);
 			JSONObject json = new JSONObject(result);
+			//System.out.println("INFO ROOM JSON RECEPT: CONTENU:"+json.toString());
 			int idRoom = json.getInt("idRoom");
 			String nameRoom = json.getString("nameRoom");
 			String creatorRoom = json.getString("creatorRoom");
@@ -139,7 +140,7 @@ public class Client{
 			
 			//System.out.println("JSON client: "+dataset);
 			
-		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+		} catch (JSONException e) {System.out.println("Erreur JSON client INFO ROOM:"+e.getMessage());}
 		
 		return room;
 	}
@@ -157,7 +158,7 @@ public class Client{
 			dataset.put("posBateau", posBateau);
 			EnvoiRequete(dataset);
 			//System.out.println("JSON client: "+dataset);
-		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+		} catch (JSONException e) {System.out.println("Erreur JSON client SELEC POS:"+e.getMessage());}
 	}
 	
 	public ArrayList<Integer> Shoot(int posTir)
@@ -179,8 +180,7 @@ public class Client{
 				retour.add(json.getInt("playerDead"+i));
 			}
 			
-			
-		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+		} catch (JSONException e) {System.out.println("Erreur JSON client SHOOT:"+e.getMessage());}
 		return (retour);	
 	}
 	
@@ -191,7 +191,7 @@ public class Client{
 			try {
 				dataset.put("methode", "exit");
 				dataset.put("idPlayer",player.getId());
-			} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+			} catch (JSONException e) {System.out.println("Erreur JSON client EXIT:"+e.getMessage());}
 			System.out.println("JSON client: "+dataset);	
 			EnvoiRequete(dataset);
 			sock.close();
@@ -209,7 +209,7 @@ public class Client{
 			String result = EnvoiRequete(dataset);
 			JSONObject json = new JSONObject(result);
 			retour = json.getString("lastAction");
-		} catch (JSONException e) {System.out.println("Erreur JSON client:"+e.getMessage());}
+		} catch (JSONException e) {System.out.println("Erreur JSON client LAST ACTION:"+e.getMessage());}
 		return retour;
 	}
 	
