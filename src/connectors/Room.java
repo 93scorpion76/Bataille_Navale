@@ -141,7 +141,7 @@ public class Room{
 		{
 			// Si tous les players sont prêt alors la room est prête.
 			boolean start = false;
-			if(lPlayer.size() >= 2){
+			if(lPlayer.size() == nbPlayerMax){
 				start = true;
 				for(int i=0;i<lPlayer.size();i++)
 				{

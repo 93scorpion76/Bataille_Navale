@@ -33,6 +33,7 @@ public class ThreadClient implements Runnable, Observateur{
 			if(!cli.getSock().isClosed()){
 				
 				if(!isUpdate)
+				{
 					room = cli.InfoRoom();
 				
 					for(int i = 0; i < room.getNbPlayer(); i++)
@@ -45,16 +46,15 @@ public class ThreadClient implements Runnable, Observateur{
 						salon.setStatut(i, true);
 					
 					}
-					
-					try {
-						Thread.sleep(33);
-						isUpdate = false;
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			
 				}
+				
+				try {
+					Thread.sleep(33);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			}
 			else
 				break;
 		}
@@ -66,7 +66,6 @@ public class ThreadClient implements Runnable, Observateur{
 			}
 		}
 	}
-	
 
 	@Override
 	public void update(String string, String appel) {
@@ -74,6 +73,7 @@ public class ThreadClient implements Runnable, Observateur{
 		isUpdate = true;
 		if(string.equals("choosePosition")){
 			cli.SelectPosition(Integer.parseInt(appel));
+			isUpdate = false;
 		}
 		else if(string.equals("exit")){
 			cli.Exit();

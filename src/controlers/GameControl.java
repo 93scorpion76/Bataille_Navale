@@ -64,6 +64,7 @@ public class GameControl implements Runnable, Observateur{
 		int jeton = -1;
 		while(!room.isFinish())
 		{
+			
 			this.room = cli.InfoRoom();
 			
 			if(room.getJeton() != jeton)
