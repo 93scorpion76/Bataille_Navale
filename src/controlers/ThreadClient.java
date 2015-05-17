@@ -24,6 +24,7 @@ public class ThreadClient implements Runnable, Observateur{
 	public void run() {
 		// TODO Auto-generated method stub
 		Room room = cli.InfoRoom();
+		
 		salon.addObservateur(this);
 		
 		while(!room.isStart())
@@ -31,7 +32,7 @@ public class ThreadClient implements Runnable, Observateur{
 			if(!cli.getSock().isClosed()){
 
 				room = cli.InfoRoom();
-			
+				this.salon.setNbPlayer(room.getNbPlayerMax() - room.getNbPlayer());
 			
 				for(int i = 0; i < room.getNbPlayer(); i++)
 				{

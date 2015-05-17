@@ -17,6 +17,7 @@ public class ConnexionControl {
 		//cli = new Client("localhost",1234, namePlayer);
 		this.cli = cli;
 		Player myPlayer = player;
+		
 		roomView = new RoomView(myPlayer);
 		
 		ThreadClient tc = new ThreadClient(roomView, cli, this);
