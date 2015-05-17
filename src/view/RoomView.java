@@ -154,7 +154,6 @@ public class RoomView extends JFrame implements ActionListener, Observable{
 				ActionButton.setChoose(true);
 				player.setReady(true);
 				ready.setEnabled(false);
-				System.out.println("Position choisi : "+player.getPosBateau());
 				this.updateObservateur("choosePosition");
 			}
 		}
