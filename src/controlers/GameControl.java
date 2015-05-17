@@ -89,7 +89,6 @@ public class GameControl implements Runnable, Observateur{
 					
 					for(int i = 0; i <  room.getNbPlayer(); i++)
 					{
-						System.out.println("position du joueur "+room.getPlayer(i).getNom()+" en "+room.getPlayer(i).getPosBateau());
 						if(room.getPlayer(i).isLife()){
 							boat[i] = room.getPlayer(i).getPosBateau();
 							debris[i] = 0;	
