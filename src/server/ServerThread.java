@@ -151,8 +151,10 @@ public class ServerThread implements Runnable {
 								{
 									room.removePlayerById(idPlayer);
 									// Si c'était le dernier joueur on met fin à la room.
-									room.setRoomFull(true);
-									execute = false;
+									if(room.getNbPlayer()<=0){
+										room.setRoomFull(true);
+										execute = false;
+									}		
 								}
 								
 								lastAction = room.getPlayerById(idPlayer).getNom()+" est mort en quittant la partie.";
