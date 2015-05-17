@@ -68,6 +68,7 @@ public class ServerThread implements Runnable {
 									dataset.put("namePlayer"+i,room.getPlayer(i).getNom());
 									dataset.put("lifePlayer"+i,room.getPlayer(i).isLife());
 									dataset.put("readyPlayer"+i,room.getPlayer(i).isReady());
+									dataset.put("posBateau"+i,room.getPlayer(i).getPosBateau());
 								}	
 								dataset.put("roomFull",room.isFull());
 								dataset.put("jeton",room.getJeton());
@@ -149,6 +150,9 @@ public class ServerThread implements Runnable {
 								else
 								{
 									room.removePlayerById(idPlayer);
+									// Si c'était le dernier joueur on met fin à la room.
+									room.setRoomFull(true);
+									execute = false;
 								}
 								
 								lastAction = room.getPlayerById(idPlayer).getNom()+" est mort en quittant la partie.";

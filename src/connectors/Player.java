@@ -17,12 +17,13 @@ public class Player {
 		PosBateau = 0;
 	}
 	
-	public Player(int id,String nom,boolean life, boolean ready)
+	public Player(int id,String nom,boolean life, boolean ready, int PosBateau)
 	{
 		this.Id = id; 
 		this.Nom = nom; 
 		this.life = life;
 		this.ready = ready;
+		this.PosBateau = PosBateau;
 	}
 	
 	public int getPosBateau() {
