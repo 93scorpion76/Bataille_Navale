@@ -34,16 +34,15 @@ public class ThreadClient implements Runnable, Observateur{
 				
 				if(!isUpdate)
 					room = cli.InfoRoom();
-			
+				
 					for(int i = 0; i < room.getNbPlayer(); i++)
 					{
-						/*if(room.getPlayer(i).getPosBateau() != 0)
-						System.out.print(room.getPlayer(i).isReady()+" : "+room.getPlayer(i).getPosBateau()+"\t");
-						 */
-						salon.setPlayerName(i,room.getPlayer(i).getNom());
+					room = cli.InfoRoom();
+			
+					salon.setPlayerName(i,room.getPlayer(i).getNom());
 					
-						if(room.getPlayer(i).isReady())
-							salon.setStatut(i, true);
+					if(room.getPlayer(i).isReady())
+						salon.setStatut(i, true);
 					
 					}
 					

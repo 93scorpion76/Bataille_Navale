@@ -80,7 +80,6 @@ public class Room{
 		public void setRoomFull(boolean roomFull) {this.roomFull = roomFull;}		
 		public int getIdRoom() {return idRoom;}
 		public String getName(){return name;}
-		
 		public String getCreator(){return creator;}
 		public int getNbPlayerMax(){return nbPlayerMax;}
 		public int getNbPlayerLife(){return nbPlayerLife;}
@@ -104,6 +103,15 @@ public class Room{
 					return lPlayer.get(i);
 			}
 			return null;
+		}
+		
+		public void removePlayerById(int idPlayer)
+		{
+			for(int i=0;i<lPlayer.size();i++)
+			{
+				if(lPlayer.get(i).getId() == idPlayer)
+					lPlayer.remove(i);
+			}
 		}
 		
 		public Player getPlayer(int position)
@@ -132,7 +140,7 @@ public class Room{
 		public boolean isStart()
 		{
 			// Si tous les players sont prêt alors la room est prête.
-			boolean start;
+			boolean start = false;
 			if(lPlayer.size() >= 2){
 				start = true;
 				for(int i=0;i<lPlayer.size();i++)
@@ -140,10 +148,6 @@ public class Room{
 					if(!lPlayer.get(i).isReady())
 						start = false;
 				}
-			}
-			else
-			{
-				start = false;
 			}
 			
 			return start;
