@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import client.Client;
 import connectors.Player;
 import controlers.ConnexionControl;
+import controlers.ListControl;
 import controlers.ListRoomControl;
 import modele.PanneauColor;
 import modele.SmallButton;
@@ -164,7 +165,7 @@ public class CreateView extends JFrame implements ActionListener{
 		else if(event.getSource() == back)
 		{
 			this.dispose();
-			new ListRoomControl(namePlayer);
+			new ListControl(namePlayer);
 		}
 		else
 		{

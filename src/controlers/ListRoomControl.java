@@ -11,35 +11,41 @@ public class ListRoomControl implements Runnable, Observateur{
 	private Client cli;
 	private ListRoomView roomView;
 	private String namePlayer;
+	private ListControl listControl;
+	private boolean isUpdate = false;
 	
-	public ListRoomControl(String name)
+	/*public ListRoomControl(String name)
 	{
 		cli = new Client("localhost", 1234);
 
 		namePlayer = name;
-
 		roomView = new ListRoomView(namePlayer);
-		roomView.addObservateur(this);
 		
-		if(cli.ListRoom().size() > 0)
-			System.out.println("\n Nom de la room: "+cli.ListRoom().get(0).getName());
+		run();
+	}*/
+
+	public ListRoomControl(String namePlayer, ListRoomView roomView, Client cli,
+			ListControl listControl) {
+		// TODO Auto-generated constructor stub
 		
-		roomView.refreshTable(cli.ListRoom());
-		//run();
+		this.namePlayer = namePlayer;
+		this.cli = cli;
+		this.roomView = roomView;
+		this.listControl = listControl;
 	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-
+		this.roomView.addObservateur(this);
 		while(cli.getPlayer() == null)
 		{
-			//System.out.print("\n"+cli.ListRoom().get(0).getName());
-			roomView.refreshTable(cli.ListRoom());
+			if(!isUpdate)
+				this.roomView.refreshTable(cli.ListRoom());
 
 			try 
 			{
-				Thread.sleep(33);
+				Thread.sleep(200);
 			} 
 			catch (InterruptedException e) 
 			{
@@ -52,6 +58,8 @@ public class ListRoomControl implements Runnable, Observateur{
 	@Override
 	public void update(String string, String appel) {
 		// TODO Auto-generated method stub
+		isUpdate = true;
+		
 		Player player = null;
 		if(string.equals("create")){
 			new CreateView(namePlayer, cli);
@@ -63,8 +71,7 @@ public class ListRoomControl implements Runnable, Observateur{
 				new ConnexionControl(player, cli);
 			}
 		}
+		isUpdate = false;
 		roomView.dispose();
-		
-		
 	}
 }

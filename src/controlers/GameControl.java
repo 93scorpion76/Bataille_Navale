@@ -156,7 +156,7 @@ public class GameControl implements Runnable, Observateur{
 			
 			cli.Exit();
 			game.dispose();
-			new ListRoomControl(player.getNom());
+			new ListControl(player.getNom());
 		}
 	
 	} 

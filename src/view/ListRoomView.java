@@ -52,6 +52,12 @@ public class ListRoomView extends JFrame implements ActionListener, Observable, 
 		*/
 		
 		Object data [][] = new Object[1][title.length];
+		
+		for(int i = 0; i < title.length; i++)
+		{
+			data[0][i] = "";
+		}
+		
 		tabModel = new JTableModel(data, title);
 		myJTable = new JTable(tabModel);
 		myJTable.addMouseListener(this);
