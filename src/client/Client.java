@@ -178,17 +178,19 @@ public class Client{
 			
 			String result = EnvoiRequete(dataset);
 			
-			if(result != "Erreur, le jeton n'est pas à toi !")
+			JSONObject json = new JSONObject(result);
+			if(json.getBoolean("erreur"))
 			{
-				JSONObject json = new JSONObject(result);
+				retour = null;
+			}
+			else
+			{
 				int nbPlayerDead = json.getInt("nbPlayerDead");
 				for(int i=0;i<nbPlayerDead;i++)
 				{
 					retour.add(json.getInt("playerDead"+i));
 				}
-			}
-			else
-				retour = null;
+			}		
 		} catch (JSONException e) {System.out.println("Erreur JSON client SHOOT:"+e.getMessage());}
 				
 		return (retour);	

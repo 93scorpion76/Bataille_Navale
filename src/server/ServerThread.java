@@ -111,10 +111,11 @@ public class ServerThread implements Runnable {
 								if(room.getJeton() == idPlayer)  // On vérifie que c'est bien le joueur qui a le droit de parler.
 								{
 									// Préparation de la réponse: 
-									// Liste des id des joueurs touchés
+									// Liste des id des joueurs touchés		
 									ArrayList<Integer> lShoot = room.CheckShoot(idPlayer, posTir);
 									lastAction = room.getPlayerById(idPlayer).getNom()+" a tiré en position "+posTir+" et a touché ";
 									try {
+										dataset.put("erreur","false");
 										dataset.put("nbPlayerDead",lShoot.size());
 										for(int i=0;i<lShoot.size();i++){
 											dataset.put("playerDead"+i, lShoot.get(i));
@@ -132,7 +133,7 @@ public class ServerThread implements Runnable {
 								}
 								else{
 									System.out.println("ERREUR: Ce n'est pas toi qui a le JETON !");
-									out.println("Erreur, le jeton n'est pas à toi !");
+									dataset.put("erreur","true");
 								}
 							break;
 							
