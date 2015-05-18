@@ -1,5 +1,10 @@
 package controlers;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import view.ListRoomView;
 import client.Client;
 
@@ -11,7 +16,22 @@ public class ListControl {
 	
 	public ListControl(String name)
 	{
-		cli = new Client("localhost", 1234);
+		String emplacement = "";
+		try{
+			InputStream ips=new FileInputStream("config/config.txt"); 
+			InputStreamReader ipsr=new InputStreamReader(ips);
+			BufferedReader br=new BufferedReader(ipsr);
+			String ligne;
+			while ((ligne=br.readLine())!=null){
+				emplacement = ligne;
+			}
+			br.close(); 
+		}		
+		catch (Exception e){
+			System.out.println(e.toString());
+		}
+		
+		cli = new Client(emplacement, 1234);
 
 		namePlayer = name;
 		roomView = new ListRoomView(namePlayer);
