@@ -18,6 +18,7 @@ public class ServerThread implements Runnable {
 	private Room room;
 	private String lastAction = "";
 	private boolean execute = true;
+	private int firstPlayer = -1;
 
 	public ServerThread(Room room) {
 		lsock = new ArrayList<Socket>();
@@ -83,7 +84,8 @@ public class ServerThread implements Runnable {
 									int posBateau = Integer.parseInt(json.getString("posBateau"));
 									room.getPlayerById(idPlayer).setPosBateau(posBateau);
 									room.getPlayerById(idPlayer).setReady(true);
-									
+									if(firstPlayer == -1)
+										firstPlayer = idPlayer;
 									//lastAction = room.getPlayerById(idPlayer).getNom() + " a positionné son bateau !";
 								}
 										
@@ -91,7 +93,8 @@ public class ServerThread implements Runnable {
 								if(room.getNbPlayer() == room.getNbPlayerMax()){
 									// est-ce que tous le joueurs sont prêt ? 
 									if(room.isStart()){
-										room.setJeton(room.getPlayer(0).getId()); // On donne le premier jeton ! 
+										// On donne le jeton au premier joueur qui est prêt. 
+										room.setJeton(firstPlayer); // On donne le premier jeton ! 
 										lastAction = "La partie commence !";
 									}
 								}		
